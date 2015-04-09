@@ -4,16 +4,18 @@ $(document).ready(function () {
 
     // Atribui a largura da textarea
     $("#msg").css({
-        width: $(window).width() * 0.98
+        width: $(window).width() * 0.98,
+        height: 200,
+        border: "1px solid black"
     });
 
     // dados enviadas pelo socket para o servidor
-   
+
     $('#msg').on('keydown', function (event) {
         if (event.which === 8 || event.which === 46) {
             socket.emit('msgappend', {
                 'data': event.which,
-                'pos': ($('#msg').prop("selectionStart"))
+                'pos': getCaretCharacterOffsetWithin(document.getElementById("msg"))//($('#msg').prop("selectionStart"))
             });
         }
     });
@@ -21,7 +23,7 @@ $(document).ready(function () {
     $('#msg').on('keypress', function (event) {
         socket.emit('msgappend', {
             'data': event.which,
-            'pos': ($('#msg').prop("selectionStart"))
+            'pos': getCaretCharacterOffsetWithin(document.getElementById("msg"))//($('#msg').prop("selectionStart"))
         });
     });
 
@@ -43,10 +45,11 @@ $(document).ready(function () {
                 $('#msg').selectRange(posactual - 1);
             }
         } else {
-            appendAtCaret($('#msg'), data.pos, String.fromCharCode(data.data));
+            var position = data.pos, txt = String.fromCharCode(data.data);
+            var current = $("#msg").html();
+            $("#msg").html([current.slice(0, position), txt, current.slice(position)].join(''));
         }
     });
-
 });
 
 $.fn.selectRange = function (start, end) {
@@ -68,21 +71,39 @@ $.fn.selectRange = function (start, end) {
 //$('#elem').selectRange(3, 5); // select a range of text
 //$('#elem').selectRange(3); // set cursor position
 
-function appendAtCaret($target, caret, $value) {
-    var value = $target.val();
-    if (caret != value.length) {
-        var startPos = $target.prop("selectionStart");
-        var scrollTop = $target.scrollTop;
-        $target.val(value.substring(0, caret) + $value + value.substring(caret, value.length));
-        $target.prop("selectionStart", startPos + $value.length);
-        $target.prop("selectionEnd", startPos + $value.length);
-        $target.scrollTop = scrollTop;
-    } else if (caret === 0) {
-        $target.val($value + value);
-    } else {
-        $target.val(value + $value);
+function getCaretCharacterOffsetWithin(element) {
+    var caretOffset = 0;
+    if (typeof window.getSelection != "undefined") {
+        var range = window.getSelection().getRangeAt(0);
+        var preCaretRange = range.cloneRange();
+        preCaretRange.selectNodeContents(element);
+        preCaretRange.setEnd(range.endContainer, range.endOffset);
+        caretOffset = preCaretRange.toString().length;
+    } else if (typeof document.selection != "undefined" && document.selection.type != "Control") {
+        var textRange = document.selection.createRange();
+        var preCaretTextRange = document.body.createTextRange();
+        preCaretTextRange.moveToElementText(element);
+        preCaretTextRange.setEndPoint("EndToEnd", textRange);
+        caretOffset = preCaretTextRange.text.length;
     }
+    return caretOffset;
 }
+
+//function appendAtCaret($target, caret, $value) {
+//    var value = $target.val();
+//    if (caret != value.length) {
+//        var startPos = $target.prop("selectionStart");
+//        var scrollTop = $target.scrollTop;
+//        $target.append(value.substring(0, caret) + $value + value.substring(caret, value.length));
+//        $target.prop("selectionStart", startPos + $value.length);
+//        $target.prop("selectionEnd", startPos + $value.length);
+//        $target.scrollTop = scrollTop;
+//    } else if (caret === 0) {
+//        $target.append($value + value);
+//    } else {
+//        $target.append(value + $value);
+//    }
+//}
 
 //function Iniciar() {
 //    $('#msg').document.designMode = 'On';
