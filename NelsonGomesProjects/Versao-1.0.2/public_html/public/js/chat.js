@@ -30,20 +30,25 @@ $(document).ready(function () {
     // dados recebidos pelo socket para o browser
     socket.on('msgappend', function (data) {
         if (data.data === 8 /* backspace*/ || data.data === 46 /* delete */) {
-            var posactual = $('#msg').prop("selectionStart");
-            var str = $("#msg").val();
+//            var posactual = getCaretCharacterOffsetWithin(document.getElementById("msg"));//$('#msg').prop("selectionStart");
+            var str = $("#msg").text();
             var str1 = "";
             if (data.data === 8) {
-                str1 = str.slice(0, data.pos - 1) + str.slice(data.pos);
+                if (data.pos > 0) {
+                    str1 = str.slice(0, data.pos - 1) + str.slice(data.pos);
+                } else {
+                    str1 = str.slice(data.pos);
+                }
+
             } else if (data.data === 46) {
                 str1 = str.slice(0, data.pos) + str.slice(data.pos + 1);
             }
-            $('#msg').val(str1);
-            if (posactual < data.pos) {
-                $('#msg').selectRange(posactual); // set cursor position
-            } else {
-                $('#msg').selectRange(posactual - 1);
-            }
+            $('#msg').html(str1);
+//            if (posactual < data.pos) {
+//                $('#msg').selectRange(posactual);
+//            } else {
+//                $('#msg').selectRange(posactual - 1);
+//            }
         } else {
             var position = data.pos, txt = String.fromCharCode(data.data);
             var current = $("#msg").html();
