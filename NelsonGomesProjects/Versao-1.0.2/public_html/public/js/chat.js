@@ -1,179 +1,171 @@
+var users = [];
+var numUsers = 0;
+var socket = "";
+var username = "";
+
 $(document).ready(function () {
     // cria a ligação com o servidor que disponibiliza o socket
-    var socket = io.connect(window.location.href);
+    socket = io.connect(window.location.href);
+    
+    $("#startlogin").click(function () {
+        username = $("#username").val();
+        if ($.trim(username) !== "") {
+            $("#div-login").css({
+                display: "none"
+            });
+            $("#contentor").css({
+                display: "inline"
+            });
+            $("#atualuser").html(
+                    "Utilizador atual <u><i><b>" +
+                    username +
+                    "</b></i></u>");
+            // envia o nome do utilizdore a posicao do mouse
+            socket.emit('mouseMove', {
+                'user': username,
+                'x': 10000,
+                'y': 10000
+            });
+            // envia ao servidor o pedido do texto que os outros 
+            // utilizadores possuem na textarea
+            socket.emit("textExist");
+            $("#msg1").focus();
+        } else {
+            $("#erro_name").html("Nome Incorreto!");
+            setTimeout(function () {
+                $("#erro_name").animate({
+                    opacity: 0
+                }, 1000, function () {
+                    $("#erro_name").html("");
+                    $("#erro_name").css({
+                        opacity: 1
+                    });
+                });
+            }, 500);
+        }
+    });
 
     // Atribui a largura da textarea
     $("#msg").css({
-        width: $(window).width() * 0.98,
-        height: 200,
-        border: "1px solid black"
+        width: $(window).width() * 0.70,
+        height: $(window).height() * 0.6
+    });
+    $("#contentorListaUsers").css({
+        width: $(window).width() * 0.23,
+        height: $(window).height() * 0.6
     });
 
-    // dados enviadas pelo socket para o servidor
 
+    // *******************************************************************
+    // dados enviadas pelo socket para o servidor
+    // *******************************************************************
+    // evia as cordenados do ponteiro do rato e do nome do utilizador
+    $('body').on("mousemove", function (event) {
+        socket.emit('mouseMove', {
+            'user': username,
+            'x': event.pageX,
+            'y': event.pageY
+        });
+    });
+
+    // envia o codigo ASCII do backspace e do delete
     $('#msg').on('keydown', function (event) {
         if (event.which === 8 || event.which === 46) {
             socket.emit('msgappend', {
                 'data': event.which,
-                'pos': getCaretCharacterOffsetWithin(document.getElementById("msg"))//($('#msg').prop("selectionStart"))
+                'pos': $("#msg").getCursorPosition()
             });
         }
     });
 
+    // envia o codigo ASCII das teclas carregadas
     $('#msg').on('keypress', function (event) {
         socket.emit('msgappend', {
             'data': event.which,
-            'pos': getCaretCharacterOffsetWithin(document.getElementById("msg"))//($('#msg').prop("selectionStart"))
+            'pos': $("#msg").getCursorPosition()
         });
     });
 
+    // *******************************************************************
     // dados recebidos pelo socket para o browser
+    // *******************************************************************
+    // recebe o codigo ASCII da tecla recebida, converte-a para 
+    // carater e adiciona-o na posicao coreta
     socket.on('msgappend', function (data) {
-        if (data.data === 8 /* backspace*/ || data.data === 46 /* delete */) {
-//            var posactual = getCaretCharacterOffsetWithin(document.getElementById("msg"));//$('#msg').prop("selectionStart");
-            var str = $("#msg").text();
-            var str1 = "";
+        var posactual = $("#msg").getCursorPosition();
+        var str = $("#msg").val();
+        var str1 = "";
+        if (data.data === 8 /* backspace*/
+                || data.data === 46 /* delete */) {
             if (data.data === 8) {
                 if (data.pos > 0) {
                     str1 = str.slice(0, data.pos - 1) + str.slice(data.pos);
                 } else {
                     str1 = str.slice(data.pos);
                 }
-
             } else if (data.data === 46) {
                 str1 = str.slice(0, data.pos) + str.slice(data.pos + 1);
             }
-            $('#msg').html(str1);
-//            if (posactual < data.pos) {
-//                $('#msg').selectRange(posactual);
-//            } else {
-//                $('#msg').selectRange(posactual - 1);
-//            }
         } else {
-            var position = data.pos, txt = String.fromCharCode(data.data);
-            var current = $("#msg").html();
-            $("#msg").html([current.slice(0, position), txt, current.slice(position)].join(''));
+            str1 = [str.slice(0, data.pos), String.fromCharCode(data.data), str.slice(data.pos)].join('');
+        }
+        $('#msg').val(str1);
+        if (posactual < data.pos) {
+            $('#msg').selectRange(posactual);
+        } else {
+            $('#msg').selectRange(posactual - 1);
+        }
+    });
+
+    // recebe as cordenadas dos outros utilizadores e movimenta a label dele 
+    // conforme as coordenadas recebidas 
+    socket.on('mouseMove', function (data, port, socketid) {
+        if (data.user !== "") {
+            if (typeof users[socketid] === "undefined") {
+                $("body").append('<div id="' + socketid + '" class="div-main ' + socketid + '"><p class="name-user"></p></div>');
+                users[socketid] = new Client($("#" + socketid), data.user, port, socketid);
+                $("#listaUsers").append(
+                        "<p class='" + 
+                        socketid + 
+                        "'><img class='imguser' src='./img/user.png'>" +
+                        data.user +
+                        "</p>");
+                users[socketid].setName(data.user);
+            } else {
+                users[socketid].setSocketId(socketid);
+                users[socketid].setPosition(data.x, data.y);
+            }
+        }
+    });
+
+    // devolve para o servidor de todo o texto da textarea e da 
+    // posicao do mouse
+    socket.on("requestOldText", function () {
+        socket.emit('returnOldText', {
+            data: $("#msg").val()
+        });
+        socket.emit('mouseMove', {
+            'user': username,
+            'x': 0,
+            'y': 0
+        });
+    });
+
+    // atualiza a textarea com o texto ja existente na textarea dos 
+    // outro utilizadores
+    socket.on("returnOldText", function (data) {
+        $("#msg").html("");
+        $("#msg").val(data.data);
+    });
+
+    // Apaga a informacao referente ao utilizador que se desconectou
+    socket.on('diconnected', function (socketid) {
+        for (var item in users) {
+            if (users[item].getSocketId() === socketid) {
+                var numid = users[item].getdivid();
+                users.splice(users[item], 1);
+                $("." + numid).remove();
+            }
         }
     });
 });
-
-$.fn.selectRange = function (start, end) {
-    if (!end)
-        end = start;
-    return this.each(function () {
-        if (this.setSelectionRange) {
-            this.focus();
-            this.setSelectionRange(start, end);
-        } else if (this.createTextRange) {
-            var range = this.createTextRange();
-            range.collapse(true);
-            range.moveEnd('character', end);
-            range.moveStart('character', start);
-            range.select();
-        }
-    });
-};
-//$('#elem').selectRange(3, 5); // select a range of text
-//$('#elem').selectRange(3); // set cursor position
-
-function getCaretCharacterOffsetWithin(element) {
-    var caretOffset = 0;
-    if (typeof window.getSelection != "undefined") {
-        var range = window.getSelection().getRangeAt(0);
-        var preCaretRange = range.cloneRange();
-        preCaretRange.selectNodeContents(element);
-        preCaretRange.setEnd(range.endContainer, range.endOffset);
-        caretOffset = preCaretRange.toString().length;
-    } else if (typeof document.selection != "undefined" && document.selection.type != "Control") {
-        var textRange = document.selection.createRange();
-        var preCaretTextRange = document.body.createTextRange();
-        preCaretTextRange.moveToElementText(element);
-        preCaretTextRange.setEndPoint("EndToEnd", textRange);
-        caretOffset = preCaretTextRange.text.length;
-    }
-    return caretOffset;
-}
-
-//function appendAtCaret($target, caret, $value) {
-//    var value = $target.val();
-//    if (caret != value.length) {
-//        var startPos = $target.prop("selectionStart");
-//        var scrollTop = $target.scrollTop;
-//        $target.append(value.substring(0, caret) + $value + value.substring(caret, value.length));
-//        $target.prop("selectionStart", startPos + $value.length);
-//        $target.prop("selectionEnd", startPos + $value.length);
-//        $target.scrollTop = scrollTop;
-//    } else if (caret === 0) {
-//        $target.append($value + value);
-//    } else {
-//        $target.append(value + $value);
-//    }
-//}
-
-//function Iniciar() {
-//    $('#msg').document.designMode = 'On';
-//}
-//
-//function recortar() {
-//    $('#msg').document.execCommand('cut', false, null);
-//}
-//
-//function copiar() {
-//    $('#msg').document.execCommand('copy', false, null);
-//}
-//
-//function colar() {
-//    $('#msg').document.execCommand('paste', false, null);
-//}
-//
-//function desfazer() {
-//    $('#msg').document.execCommand('undo', false, null);
-//}
-//
-//function refazer() {
-//    $('#msg').document.execCommand('redo', false, null);
-//}
-//
-//function negrito() {
-//    $('#msg').document.execCommand('bold', false, null);
-//}
-//
-//function italico() {
-//    $('#msg').document.execCommand('italic', false, null);
-//}
-//
-//function sublinhado() {
-//    $('#msg').document.execCommand('underline', false, null);
-//}
-//
-//function alinharEsquerda() {
-//    $('#msg').document.execCommand('justifyleft', false, null);
-//}
-//
-//function centralizado() {
-//    $('#msg').document.execCommand('justifycenter', false, null);
-//}
-//
-//function alinharDireita() {
-//    $('#msg').document.execCommand('justifyright', false, null);
-//}
-//
-//function numeracao() {
-//    $('#msg').document.execCommand('insertorderedlist', false, null);
-//}
-//
-//function marcadores() {
-//    $('#msg').document.execCommand('insertunorderedlist', false, null);
-//}
-//
-//function fonte(fonte) {
-//    if (fonte != '') {
-//        $('#msg').document.execCommand('fontname', false, fonte);
-//    }
-//}
-//
-//function tamanho(tamanho) {
-//    if (tamanho != '') {
-//        $('#msg').document.execCommand('fontsize', false, tamanho);
-//    }
-//}

@@ -8,6 +8,112 @@ and open the template in the editor.
     Author     : NelsonGomes
 */
 
-.panel {
-    width: 100%;
+#contentor {
+    z-index: 1;
 }
+#contentorListaUsers {
+    border: 1px solid black;    
+    float: left;
+    margin-left: 5px;
+    overflow: hidden;
+}
+
+#listaUsers {
+    font-size: 3hmax;
+}
+
+#listaUsers > p, #contentorListaUsers > p { 
+    margin: 0 !important; 
+    border-bottom: 1px solid black;
+}
+
+#listaUsers > p:hover {
+    background-color: bisque;
+    
+}
+
+.imguser {
+    width: 15%;
+    height: auto;
+    padding-right: 5px;
+    padding-left: 5px;
+    padding-top: 2px;
+}
+
+#div-login{
+}
+#contentor {
+    display: none;
+}
+
+.div-main { 
+    top: 0;
+    left: 0;
+    height: 21px;
+    width: auto;
+    position: absolute;
+    background: #030405;
+    border: 1px solid #040505;
+    float: left;
+}
+.div-main:after, .div-main:before {
+    right: 100%;
+    top: 0%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+}
+
+.div-main:after {
+    border-color: rgba(3, 4, 5, 0);
+    border-right-color: #030405;
+    border-width: 1px;
+    margin-left: -1px;
+}
+.div-main:before {
+    border-color: rgba(4, 5, 5, 0);
+    border-right-color: #040505;
+    border-width: 11px;
+    margin-left: -11px;
+}
+
+
+.name-user {
+    font-weight: bold;
+    font-family: sans-serif;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    margin: 2px;
+}
+
+
+
+#msg {
+    border: 1px solid black;
+    float: left;
+}
+
+a.btnstyles {
+    width: 30px;
+    height: 30px;
+}
+
+select.btnstyles {
+    height: 25px;
+}
+
+.btnstyles {
+    background: #ccc;
+    cursor: pointer;
+}
+
+.btnstyles:active {
+    -webkit-box-shadow: inset 1px 1px 30px 1px rgba(50, 50, 50, 1);
+    -moz-box-shadow:    inset 1px 1px 30px 1px rgba(50, 50, 50, 1);
+    box-shadow:         inset 1px 1px 30px 1px rgba(50, 50, 50, 1);
+}
+
