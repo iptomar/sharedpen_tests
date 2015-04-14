@@ -2,6 +2,7 @@ var users = [];
 var numUsers = 0;
 var socket = "";
 var username = "";
+var a = 0;
 
 $(document).ready(function () {
     // cria a ligação com o servidor que disponibiliza o socket
@@ -80,7 +81,8 @@ $(document).ready(function () {
 
     // envia o codigo ASCII do backspace e do delete
     $('#msg').on('keydown', function (event) {
-        if (event.which === 8 || event.which === 46) {
+        if (event.which === 8 ||
+                event.which === 46) {
             socket.emit('msgappend', {
                 'data': event.which,
                 'pos': $("#msg").getCursorPosition()
@@ -90,11 +92,31 @@ $(document).ready(function () {
 
     // envia o codigo ASCII das teclas carregadas
     $('#msg').on('keypress', function (event) {
-        socket.emit('msgappend', {
-            'data': event.which,
-            'pos': $("#msg").getCursorPosition()
-        });
+        if (event.which !== 46 && event.which !== 110 && event.which !== 190) {
+            socket.emit('msgappend', {
+                'data': event.which,
+                'pos': $("#msg").getCursorPosition()
+            });
+        }
     });
+
+    // envia o codigo ASCII das teclas carregadas
+    $('#msg').on('keydown keypress', function (event) {
+        if (event.which === 110 && event.type !== 'keydown') {
+            socket.emit('msgappend', {
+                'data': "abc",
+                'pos': $("#msg").getCursorPosition()
+            });
+        }
+        if ((event.which === 110 || event.which === 190) &&
+                event.type === 'keydown') {
+            socket.emit('msgappend', {
+                'data': "ponto",
+                'pos': $("#msg").getCursorPosition()
+            });
+        }
+    });
+
 
     // *******************************************************************
     // dados recebidos pelo socket para o browser
@@ -116,14 +138,27 @@ $(document).ready(function () {
             } else if (data.data === 46) {
                 str1 = str.slice(0, data.pos) + str.slice(data.pos + 1);
             }
+            $('#msg').val(str1);
+            if (posactual < data.pos) {
+                $('#msg').selectRange(posactual);
+            } else {
+                $('#msg').selectRange(posactual - 1);
+            }
         } else {
-            str1 = [str.slice(0, data.pos), String.fromCharCode(data.data), str.slice(data.pos)].join('');
-        }
-        $('#msg').val(str1);
-        if (posactual < data.pos) {
-            $('#msg').selectRange(posactual);
-        } else {
-            $('#msg').selectRange(posactual - 1);
+            if (data.data === "ponto") {
+                str1 = [str.slice(0, data.pos), String.fromCharCode(46), str.slice(data.pos)].join('');
+            } else if (data.data === "abc") {
+                str1 = [str.slice(0, data.pos), String.fromCharCode(110), str.slice(data.pos)].join('');
+            } else {
+                str1 = [str.slice(0, data.pos), String.fromCharCode(data.data), str.slice(data.pos)].join('');
+            }
+            $('#msg').val(str1);
+            if (posactual < data.pos) {
+                $('#msg').selectRange(posactual);
+            } else {
+                $('#msg').selectRange(posactual + 1);
+            }
+
         }
     });
 
