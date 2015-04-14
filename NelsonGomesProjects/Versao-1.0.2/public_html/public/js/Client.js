@@ -1,5 +1,4 @@
 /**
- * 
  * @param {type} pai elemento principal
  * @param {type} user nome do utilizador
  * @param {type} port porta de ligacao do utilizador

@@ -6,7 +6,18 @@ var username = "";
 $(document).ready(function () {
     // cria a ligação com o servidor que disponibiliza o socket
     socket = io.connect(window.location.href);
-    
+
+    // coloca o cursor para introduzir o nome do utilizador
+    $("#username").focus();
+
+    // ao carregar em enter no nome do utilizador carrega no button
+    $("#username").keyup(function (event) {
+        if (event.keyCode === 13) {
+            $("#startlogin").click();
+        }
+    });
+
+    // evento de carregar no button para fazer o login
     $("#startlogin").click(function () {
         username = $("#username").val();
         if ($.trim(username) !== "") {
@@ -14,7 +25,7 @@ $(document).ready(function () {
                 display: "none"
             });
             $("#contentor").css({
-                display: "inline"
+                "visibility": "visible"
             });
             $("#atualuser").html(
                     "Utilizador atual <u><i><b>" +
@@ -47,20 +58,19 @@ $(document).ready(function () {
 
     // Atribui a largura da textarea
     $("#msg").css({
-        width: $(window).width() * 0.70,
-        height: $(window).height() * 0.6
+        width: $(window).width() * 0.68,
+        height: $(window).height() * 0.75
     });
     $("#contentorListaUsers").css({
         width: $(window).width() * 0.23,
-        height: $(window).height() * 0.6
+        height: $("#msg").height()
     });
-
 
     // *******************************************************************
     // dados enviadas pelo socket para o servidor
     // *******************************************************************
     // evia as cordenados do ponteiro do rato e do nome do utilizador
-    $('body').on("mousemove", function (event) {
+    $(window).on("mousemove", function (event) {
         socket.emit('mouseMove', {
             'user': username,
             'x': event.pageX,
@@ -122,11 +132,16 @@ $(document).ready(function () {
     socket.on('mouseMove', function (data, port, socketid) {
         if (data.user !== "") {
             if (typeof users[socketid] === "undefined") {
-                $("body").append('<div id="' + socketid + '" class="div-main ' + socketid + '"><p class="name-user"></p></div>');
+                $("body").append(
+                        '<div id="' +
+                        socketid +
+                        '" class="div-main ' +
+                        socketid +
+                        '"><p class="name-user"></p></div>');
                 users[socketid] = new Client($("#" + socketid), data.user, port, socketid);
                 $("#listaUsers").append(
-                        "<p class='" + 
-                        socketid + 
+                        "<p class='" +
+                        socketid +
                         "'><img class='imguser' src='./img/user.png'>" +
                         data.user +
                         "</p>");
@@ -167,5 +182,17 @@ $(document).ready(function () {
                 $("." + numid).remove();
             }
         }
+    });
+});
+
+$(window).resize(function () {
+    // Atribui a largura da textarea
+    $("#msg").css({
+        width: $(window).width() * 0.68,
+        height: $(window).height() * 0.75
+    });
+    $("#contentorListaUsers").css({
+        width: $(window).width() * 0.23,
+        height: $("#msg").height()
     });
 });

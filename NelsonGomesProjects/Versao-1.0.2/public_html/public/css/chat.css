@@ -19,7 +19,7 @@ and open the template in the editor.
 }
 
 #listaUsers {
-    font-size: 3hmax;
+    font-size: 2vmax;
 }
 
 #listaUsers > p, #contentorListaUsers > p { 
@@ -28,8 +28,7 @@ and open the template in the editor.
 }
 
 #listaUsers > p:hover {
-    background-color: bisque;
-    
+    background-color: bisque;    
 }
 
 .imguser {
@@ -41,9 +40,10 @@ and open the template in the editor.
 }
 
 #div-login{
+    visibility: visible;
 }
 #contentor {
-    display: none;
+    visibility: hidden;    
 }
 
 .div-main { 
@@ -89,8 +89,6 @@ and open the template in the editor.
     border: 0;
     margin: 2px;
 }
-
-
 
 #msg {
     border: 1px solid black;
