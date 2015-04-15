@@ -13,6 +13,8 @@ and open the template in the editor.
         <script src="./js/Client.js"></script>
         <script src="./js/javascript.js"></script>
         <link rel="stylesheet" href="./css/chat.css" type="text/css" media="screen" />
+
+        <script src="https://togetherjs.com/togetherjs.js"></script>
     </head>
     <body>
         <div id="div-login">
@@ -28,6 +30,12 @@ and open the template in the editor.
                 <p>Utilizadores</p>
                 <div id="listaUsers"></div>
             </div>
+
+            <button id="collaborate" type="button">Collaborate</button>
+            <script>
+                document.getElementById("collaborate")
+                        .addEventListener("click", TogetherJS, false);
+            </script>
         </div>
     </body>
 </html>
