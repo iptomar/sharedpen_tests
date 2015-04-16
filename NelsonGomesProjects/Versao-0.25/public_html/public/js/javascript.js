@@ -14,6 +14,16 @@ $.fn.getCursorPosition = function () {
     return pos;
 };
 
+$.fn.addNewText = function (val1, val2) {
+    this.append(
+            "<div class='p_msg_chat'>" +
+            "<p class = 'user_chat' > " +
+            val1 +
+            "</p> : <p class='msg_chat'>" +
+            val2 +
+            "</p></div>");
+}
+
 /**
  * coloca o curso na posicao especificada
  * @param {type} start Posicao inicial

@@ -3,6 +3,8 @@ var http = require('http');
 var socketio = require('socket.io');
 var clientes = [];
 var numclientes = 0;
+var msgChat = "";
+var textTabs = [[]];
 
 var Server = function (port) {
     this.port = port;
@@ -19,6 +21,7 @@ Server.prototype.start = function () {
     var self = this;
     this.io.on('connection', function (socket) {
 
+
         var address = socket.request.connection._peername;
         console.log('**********************************************************');
         console.log('Nova ligacao do endereco -> ' + address.address + " : " + address.port);
@@ -30,10 +33,12 @@ Server.prototype.start = function () {
         }
 
         socket.emit('welcome', {data: 'welcome'});
-        
+
         socket.on('message', function (data) {
             self.io.sockets.emit('message', data);
+            msgChat += data.user + ":" + data.data + ',';
         });
+
         socket.on('msgappend', function (data) {
             socket.broadcast.emit('msgappend', data);
         });
@@ -43,6 +48,10 @@ Server.prototype.start = function () {
 
         socket.on("textExist", function () {
             socket.broadcast.emit("requestOldText");
+        });
+
+        socket.on("requestoldmsgchat", function () {
+            socket.emit('responseOldmsgChat', msgChat);
         });
 
         socket.on("returnOldText", function (data) {
@@ -56,6 +65,7 @@ Server.prototype.start = function () {
             --numclientes;
             if (numclientes <= 0) {
                 console.log("Sem Clientes ligado");
+                msgChat = "";
             }
         });
     });
