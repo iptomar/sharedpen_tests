@@ -80,7 +80,6 @@ $(document).ready(function () {
 //    });
 
     // envia o codigo ASCII do backspace e do delete
-<<<<<<< HEAD
     $('#msg').on('keydown', function (event) {
         if (event.which === 8 || event.which === 46) {
             socket.emit('msgappend', {
@@ -97,7 +96,7 @@ $(document).ready(function () {
             'pos': $("#msg").getCursorPosition()
         });
     });
-=======
+
 //    $('#msg').on('keydown', function (event) {
 //        if (event.which === 8 ||
 //                event.which === 46) {
@@ -134,14 +133,13 @@ $(document).ready(function () {
 //            });
 //        }
 //    });
->>>>>>> 07753fb9b7673242ff1934b797da2f360c20a283
 
     // *******************************************************************
     // dados recebidos pelo socket para o browser
     // *******************************************************************
     // recebe o codigo ASCII da tecla recebida, converte-a para 
     // carater e adiciona-o na posicao coreta
-<<<<<<< HEAD
+
     socket.on('msgappend', function (data) {
         var posactual = $("#msg").getCursorPosition();
         var str = $("#msg").val();
@@ -167,7 +165,7 @@ $(document).ready(function () {
             $('#msg').selectRange(posactual - 1);
         }
     });
-=======
+
 //    socket.on('msgappend', function (data) {
 //        var posactual = $("#msg").getCursorPosition();
 //        var str = $("#msg").val();
@@ -206,7 +204,6 @@ $(document).ready(function () {
 //
 //        }
 //    });
->>>>>>> 07753fb9b7673242ff1934b797da2f360c20a283
 
     // recebe as cordenadas dos outros utilizadores e movimenta a label dele 
     // conforme as coordenadas recebidas 
