@@ -11,7 +11,7 @@ $(document).ready(function () {
     $("#username").focus();
 
     // ao carregar em enter no nome do utilizador carrega no button
-    $("#username").keyup(function (event) {
+    $("#username").keydown(function (event) {
         if (event.keyCode === 13) {
             $("#startlogin").click();
         }
@@ -28,7 +28,7 @@ $(document).ready(function () {
                 display: "block"
             });
             $("#atualuser").html(
-                    "Utilizador atual <u><i><b>" +
+                    "Utilizador <u><i><b>" +
                     username +
                     "</b></i></u>");
             // envia o nome do utilizdore a posicao do mouse
@@ -40,13 +40,14 @@ $(document).ready(function () {
             // envia ao servidor o pedido do texto que os outros
             // utilizadores possuem na textarea
             socket.emit("textExist");
+            socket.emit("requestoldmsgchat");
             $("#msg1").focus();
         } else {
             $("#erro_name").html("Nome Incorreto!");
             setTimeout(function () {
                 $("#erro_name").animate({
                     opacity: 0
-                }, 1000, function () {
+                }, 2000, function () {
                     $("#erro_name").html("");
                     $("#erro_name").css({
                         opacity: 1
@@ -57,10 +58,10 @@ $(document).ready(function () {
     });
 
     $("#contentor").css({
-        height: $(window).height() * 0.84
+        height: $(window).height() * 0.91
     });
     $("#msg").css({
-        height: $("#contentor").height() * 0.94
+        height: $("#contentor").height() * 0.895
     });
 
 
@@ -171,6 +172,23 @@ $(document).ready(function () {
         $("#msg").val(data.data);
     });
 
+
+    socket.on("responseOldmsgChat", function (data) {
+        $("#panelChat").html("");
+        var aux = data.split(",");
+        if (typeof aux[0] !== "undefined" && aux.length > 0) {
+            for (var i = 0, max = aux.length; i < max; i++) {
+                var aux2 = aux[i].split(":");
+                if (typeof aux2[1] !== "undefined") {
+                    $('#panelChat').addNewText(aux2[0], aux2[1].replace(",",""));
+                }
+            }
+        }
+        $('#panelChat').animate({
+            scrollTop: $('#panelChat').prop("scrollHeight")
+        }, 500);
+    });
+
     // Apaga a informacao referente ao utilizador que se desconectou
     socket.on('diconnected', function (socketid) {
         for (var item in users) {
@@ -184,7 +202,9 @@ $(document).ready(function () {
 
     //Para Chat
     socket.on('message', function (data) {
-        $('#panelChat').append(data.user + " : " + data.data + '\n');
+        $('#panelChat').addNewText(data.user, data.data);
+
+//        $('#panelChat').val($('#panelChat').val() + data.user + " : " + data.data + '\n');
         $('#panelChat').animate({
             scrollTop: $('#panelChat').prop("scrollHeight")
         }, 500);
@@ -193,12 +213,12 @@ $(document).ready(function () {
     $('#btnSendChat').click(function () {
         var chatMessage = $('#msgChat').val();
         //limpa input
-        $('#msgChat').val('');
         if (chatMessage !== "")
             socket.emit('message', {
                 'data': chatMessage,
                 'user': username
             });
+        $('#msgChat').val('');
     });
 
     $('#msgChat').keydown(function (e) {
