@@ -1,0 +1,16 @@
+body { 
+			background: url(bg.jpg) no-repeat center center fixed; 
+			-webkit-background-size: cover;
+			-moz-background-size: cover;
+			-o-background-size: cover;
+			background-size: cover;
+		}
+ 
+#login_titulo {
+	color:#fff; text-shadow:0 0 10px #fff, 0 0 20px #fff, 0 0 30px #eff, 0 0 40px #eff, 0 0 50px #dff, 0 0 60px #00d2ff, 0 0 70px #00d2ff;
+	text-align: center;
+}
+
+.checkbox label {
+	color:white;	
+}
