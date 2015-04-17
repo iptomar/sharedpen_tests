@@ -30,11 +30,11 @@ Server.prototype.start = function () {
             ++numclientes;
         }
         
-        socket.emit('message', {'cor': color});
+        socket.emit('getcolor', {'cor': color});
         
-        socket.on('message', function (data) {
+        socket.on('setcolor', function (data) {
             color = data.cor;
-            self.io.sockets.emit('message', data);
+            self.io.sockets.emit('getcolor', data);
         });    
     });
     console.log('Server do bufo a bombar!');

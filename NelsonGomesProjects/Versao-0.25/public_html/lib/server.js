@@ -4,7 +4,7 @@ var socketio = require('socket.io');
 var clientes = [];
 var numclientes = 0;
 var msgChat = "";
-var textTabs = [[]];
+var color = "default";
 
 var Server = function (port) {
     this.port = port;
@@ -20,7 +20,6 @@ Server.prototype.start = function () {
 
     var self = this;
     this.io.on('connection', function (socket) {
-
 
         var address = socket.request.connection._peername;
         console.log('**********************************************************');
@@ -50,12 +49,17 @@ Server.prototype.start = function () {
             socket.broadcast.emit("requestOldText");
         });
 
-        socket.on("requestoldmsgchat", function () {
-            socket.emit('responseOldmsgChat', msgChat);
-        });
+            socket.emit('OldmsgChat', msgChat);
 
         socket.on("returnOldText", function (data) {
             socket.broadcast.emit("returnOldText", data);
+        });
+
+        socket.emit('getcolor', {'cor': color});
+
+        socket.on('setcolor', function (data) {
+            color = data.cor;
+            self.io.sockets.emit('getcolor', data);
         });
 
         socket.on('disconnect', function () {

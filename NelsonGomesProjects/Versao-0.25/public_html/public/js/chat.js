@@ -2,10 +2,42 @@ var users = [];
 var numUsers = 0;
 var socket = "";
 var username = "";
+var listaColor = [
+    ["default", "Default"],
+    ["white", "Branco"],
+    ["red", "Vermelho"],
+    ["yellow", "Amarelo"],
+    ["blue", "Azul"],
+    ["pink", "Rosa"],
+    ["green", "Verde"]
+];
+
+var tabsID = [];
+var tabsTxt = [];
 
 $(document).ready(function () {
+
+    toastr.options = {
+        "closeButton": true,
+        "debug": false,
+        "newestOnTop": true,
+        "progressBar": true,
+        "positionClass": "toast-top-right",
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn"
+    };
+
+
     // cria a ligação com o servidor que disponibiliza o socket
     socket = io.connect(window.location.href);
+
+    // Carrega o dropdown com a liosta das cores
+    $('#colorpicker').addAllColors(listaColor);
 
     // coloca o cursor para introduzir o nome do utilizador
     $("#username").focus();
@@ -40,8 +72,7 @@ $(document).ready(function () {
             // envia ao servidor o pedido do texto que os outros
             // utilizadores possuem na textarea
             socket.emit("textExist");
-            socket.emit("requestoldmsgchat");
-            $("#msg1").focus();
+//            $("#msg1").focus();
         } else {
             $("#erro_name").html("Nome Incorreto!");
             setTimeout(function () {
@@ -57,13 +88,7 @@ $(document).ready(function () {
         }
     });
 
-    $("#contentor").css({
-        height: $(window).height() * 0.91
-    });
-    $("#msg").css({
-        height: $("#contentor").height() * 0.895
-    });
-
+    ajustElements();
 
     // *******************************************************************
     // dados enviadas pelo socket para o servidor
@@ -78,20 +103,22 @@ $(document).ready(function () {
     });
 
     // envia o codigo ASCII do backspace e do delete
-    $('#msg').on('keydown', function (event) {
+    $(document.body).on('keydown', '.txtTab', function (event) {
         if (event.which === 8 || event.which === 46) {
             socket.emit('msgappend', {
                 'data': event.which,
-                'pos': $("#msg").getCursorPosition()
+                'pos': $("#" + $(this).attr('id')).getCursorPosition(),
+                'id': "#" + $(this).attr('id')
             });
         }
     });
 
     // envia o codigo ASCII das teclas carregadas
-    $('#msg').on('keypress', function (event) {
+    $(document.body).on('keypress', '.txtTab', function (event) {
         socket.emit('msgappend', {
-            'data': event.which,
-            'pos': $("#msg").getCursorPosition()
+            'char': event.which,
+            'pos': $("#" + $(this).attr('id')).getCursorPosition(),
+            'id': "#" + $(this).attr('id')
         });
     });
 
@@ -144,6 +171,8 @@ $(document).ready(function () {
                         "'><img class='imguser' src='./img/user.png'>" +
                         data.user +
                         "</p>");
+
+                toastr.success(data.user, 'Online');
                 users[socketid].setName(data.user);
             } else {
                 users[socketid].setSocketId(socketid);
@@ -155,13 +184,12 @@ $(document).ready(function () {
     // devolve para o servidor de todo o texto da textarea e da
     // posicao do mouse
     socket.on("requestOldText", function () {
+        for (i = 0; i < tabsID.length; i++) {
+            tabsTxt[i] = $("#" + tabsID[i]).val();
+        }
         socket.emit('returnOldText', {
-            data: $("#msg").val()
-        });
-        socket.emit('mouseMove', {
-            'user': username,
-            'x': 0,
-            'y': 0
+            id: tabsID,
+            data: tabsTxt
         });
     });
 
@@ -172,15 +200,24 @@ $(document).ready(function () {
         $("#msg").val(data.data);
     });
 
+    socket.on("TabsChanged", function (data) {
+        if ($.trim(username) !== "") {
+            if (data.op === "remover") {
+                removeTab(tabsID, data.id);
+            } else {
+                Addtab(tabsID);
+            }
+        }
+    });
 
-    socket.on("responseOldmsgChat", function (data) {
+    socket.on("OldmsgChat", function (data) {
         $("#panelChat").html("");
         var aux = data.split(",");
         if (typeof aux[0] !== "undefined" && aux.length > 0) {
             for (var i = 0, max = aux.length; i < max; i++) {
                 var aux2 = aux[i].split(":");
                 if (typeof aux2[1] !== "undefined") {
-                    $('#panelChat').addNewText(aux2[0], aux2[1].replace(",",""));
+                    $('#panelChat').addNewText(aux2[0], aux2[1].replace(",", ""));
                 }
             }
         }
@@ -194,6 +231,7 @@ $(document).ready(function () {
         for (var item in users) {
             if (users[item].getSocketId() === socketid) {
                 var numid = users[item].getdivid();
+                toastr.warning(users[item].getUsername(), 'Offline');
                 users.splice(users[item], 1);
                 $("." + numid).remove();
             }
@@ -209,6 +247,37 @@ $(document).ready(function () {
             scrollTop: $('#panelChat').prop("scrollHeight")
         }, 500);
     });
+
+    socket.on('getcolor', function (data) {
+        if (data.cor === "default") {
+            $('body').css('background-image', 'url(../img/bg.jpg)');
+        } else {
+            $("body").css('background-image', 'none');
+            switch (data.cor) {
+                case "white":
+                    $("h1, h3").css({
+                        color: "black"
+                    });
+                    break;
+                default :
+                    $("h1, h3").css({
+                        color: "white"
+                    });
+                    break;
+            }
+            $("body").css("background-color", data.cor);
+        }
+        $("#colorpicker").val(data.cor);
+    });
+
+    // Recebe as Tabs quando se connecta
+    socket.on('Tabs', function (data) {
+        tabsID = data.id;
+        tabsTxt = data.txt;
+        actulizaTabs(tabsTxt);
+    });
+
+
 
     $('#btnSendChat').click(function () {
         var chatMessage = $('#msgChat').val();
@@ -226,4 +295,42 @@ $(document).ready(function () {
             $('#btnSendChat').click();
         }
     });
+
+    $("#colorpicker").change(function () {
+        socket.emit('setcolor', {
+            cor: $(this).find('option:selected').val()
+        });
+    });
+
+    // Evento "click" no separador "+ PÃ¡g."
+    $('#tabs a[href="#add-page"]').on('click', function () {
+        // Conta quantos <li>(separadores) hÃ¡ (menos 1 por causa do separador "+ PÃ¡g")
+        Addtab(tabsID);
+        $("#li-last").attr('class', '');
+        socket.emit('TabsChanged', {
+            //remover ou adicionar
+            op: "adicionar",
+            //id
+            id: tabsID[tabsID.length]
+        });
+    });
+
+    $(document.body).on('click', '.xtab', function (event) {
+        liElem = $(this).attr('id');
+        if (confirm("Tem a certeza que quer apagar?")) { // Mostra "Tem a certeza que quer apagar?" e espera que se carregue em "Ok"
+            removeTab(tabsID, liElem);
+            socket.emit('TabsChanged', {
+                //remover ou adicionar
+                op: "remover",
+                //id
+                id: liElem
+            });
+        }
+        return false;
+
+    });
+});
+
+$(window).resize(function () {
+    ajustElements();
 });

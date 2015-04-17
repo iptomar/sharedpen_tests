@@ -6,23 +6,20 @@ and open the template in the editor.
 -->
 <html>
     <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
         <script src="./lib/jquery-1.7.2.js"></script>
         <script src="/socket.io/socket.io.js"></script>
 
         <script src="./js/color.js"></script>
-        <link rel="stylesheet" href="./css/chat.css" type="text/css" media="screen" />
+
+        <!-- Bootstrap css -->
+        <link rel="stylesheet" href="./css/bootstrap.min.css" type="text/css" media="screen" />
+
     </head>
     <body>
         <div class="container">
-            
-        <select id="colorpicker">
-                <option value="1" style="background:white">Padrão</option>
-                <option value="2" style="background:red">Vermelho</option>
-                <option value="3" style="background:yellow">Amarelo</option>
-                <option value="4" style="background:blue">Azul</option>
-                <option value="5" style="background:pink">Rosa</option>
-                <option value="6" style="background:green">Verde</option>
-        </select>
-        <button id="btnok" >OK</button>
+            <select id="colorpicker" class="selectpicker show-tick"></select>
+            <button id="btnok" >OK</button>
+        </div>
     </body>
 </html>
