@@ -66,16 +66,15 @@
         
         
             // Recebe as Tabs quando se connecta
-              socket.on('Tabs', function (data) {
+              socket.on('NewTabs', function (data) {      
                 tabsID=data.id;
                 tabsTxt=data.txt;
-                actulizaTabs () ;
+                actulizaTabs() ;
               });      
 
-        
-              function actulizaTabs () {
-                  alert();
-                  for (i=0; i < tabsID.length; i++) {          
+              function actulizaTabs() {
+                  var tamanho = tabsID.length;
+                  for (i=0; i < tamanho; i++) {  
                       var idd="#"+ Addtab();   
                     $(idd).val( tabsTxt[i] );    
                   }
@@ -99,7 +98,7 @@
         $(document.body).on('keydown','.txtTab', function (event) {
           if (event.which === 8 || event.which === 46) {
             socket.emit('msgappend', {
-              'data': event.which,
+              'char': event.which,
               'pos': $("#"+$(this).attr('id')).getCursorPosition(),
               'id' : "#"+$(this).attr('id')
             });
@@ -126,9 +125,9 @@
           var posactual = $(id).getCursorPosition();
           var str = $(id).val();
           var str1 = "";
-          if (data.data === 8 /* backspace*/
-            || data.data === 46 /* delete */) {
-              if (data.data === 8) {
+          if (data.char === 8 /* backspace*/
+            || data.char === 46 /* delete */) {
+              if (data.char === 8) {
                 if (data.pos > 0) {
                   str1 = str.slice(0, data.pos - 1) + str.slice(data.pos);
                 } else {
@@ -138,7 +137,7 @@
                 str1 = str.slice(0, data.pos) + str.slice(data.pos + 1);
               }
             } else {
-              str1 = [str.slice(0, data.pos), String.fromCharCode(data.data), str.slice(data.pos)].join('');
+
             }
             $(id).val(str1);
             if (posactual < data.pos) {
@@ -200,17 +199,7 @@
                 }
               });
 
-                 socket.on("TabsChanged", function (data) {
-                     
-                    if ($.trim(username) !== "") {
-                      if(data.op == "remover"){
-                          removeTab(data.id);
-                      }else{
-                          Addtab();
-                      }
-                    }
-                     
-              });
+
 
 
 
@@ -229,8 +218,24 @@
 
             return tabsID[tabsID.length] ="msg" + (tabsID.length + 1);
         }
+        
+        
+        
+                 socket.on("TabsChanged", function (data) {
+                     
+                    if ($.trim(username) !== "") {
+                        
+                      if(data.op == "remover"){
+                          alert(data.id);
+                          removeTab(data.id);
+                      }else{
+                          Addtab();
+                      }
+                    }       
+              });
 
-
+        
+        
             $(function () {
 
             // Evento "click" no separador "+ Pág."
@@ -238,14 +243,15 @@
                 // Conta quantos <li>(separadores) há (menos 1 por causa do separador "+ Pág")
                 Addtab();        
 
-                $("li-last").attr('class','false');
+            $("li-last").attr('class','false');
 
                 
                 socket.emit('TabsChanged', {
                 //remover ou adicionar
                     op: "adicionar",  
                 //id
-                    id: tabsID[tabsID.length]   
+                    id: "msg" + (tabsID.length),
+                    pos: tabsID.length
                 });   
                 
              });
@@ -291,14 +297,8 @@
             // We do the same for all <div> from <div class="tab-content">: we change the number: 1, then 2, then 3...    
 			$('div.tab-content div#page' + getAttr[1]).html('<textarea class="form-control" id="msg' + (i + 1) + '" rows=15>').attr('id', 'page' + (i + 1))}); 
 													  
-            
-            
-            
-            
-            
-            
 
-
+            
            delete tabsID[tabsID.indexOf("msg"+liElem)];
 
     }
