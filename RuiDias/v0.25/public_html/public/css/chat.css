@@ -168,16 +168,12 @@ body, #welcome{
 	margin-left: auto;
 	margin-right: auto;
 	text-align: -webkit-center;
-	color:#fff; 
-        text-shadow:0 0 10px #fff, 
-            0 0 20px #fff, 0 0 30px #eff, 
-            0 0 40px #eff, 0 0 50px #dff, 
-            0 0 60px #00d2ff, 0 0 70px #00d2ff;
+	color:#fff; text-shadow:0 0 10px #fff, 0 0 20px #fff, 0 0 30px #eff, 0 0 40px #eff, 0 0 50px #dff, 0 0 60px #00d2ff, 0 0 70px #00d2ff;
 	text-align: center;
 	margin-bottom: 8%;
 }
 
-.form-signin > input {
+.form-signin >input {
 	margin-bottom: 5%;
 }
 @keyframes move {
