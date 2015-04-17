@@ -6,6 +6,8 @@ var username = "";
 $(document).ready(function () {
     // cria a ligação com o servidor que disponibiliza o socket
     socket = io.connect(window.location.href);
+	
+	$("div-login").show("slow");
 
     // coloca o cursor para introduzir o nome do utilizador
     $("#username").focus();
@@ -22,6 +24,9 @@ $(document).ready(function () {
         username = $("#username").val();
         if ($.trim(username) !== "") {
             $("#div-login").css({
+                display: "none"
+            });
+			 $("#welcome").css({
                 display: "none"
             });
             $("#contentor").css({
