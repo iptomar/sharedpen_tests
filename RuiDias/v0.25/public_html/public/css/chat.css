@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 @-webkit-keyframes popyoyfkqasbbkbqqeoytjypvitjfujmjkudi {
     50% {
         -webkit-transform:scale(1.2);
@@ -70,6 +71,9 @@
     padding:0;margin:0;font:13px Arial,Helvetica;text-transform:none;font-size: 100%;vertical-align:baseline;line-height:normal;color:#fff;position:static;border:0 !important;margin:0 !important;padding:0 !important;width:auto !important;letter-spacing:normal !important;font:13px Arial,Helvetica !important;text-align:left !important;text-shadow:none !important;text-transform:none !important;word-spacing:normal !important;}#yoyfkqasbbkbqqeoytjypvitjfujmjkudi a{padding:0;margin:0;font:13px Arial,Helvetica;text-transform:none;font-size: 100%;vertical-align:baseline;line-height:normal;color:#fff;position:static;font-weight:normal !important;background:none !important;text-decoration:underline !important;color:#fff !important;}a#yoyfkqasbbkbqqeoytjypvitjfujmjkudi-gear{padding:0;margin:0;font:13px Arial,Helvetica;text-transform:none;font-size: 100%;vertical-align:baseline;line-height:normal;color:#fff;position:static;text-decoration:none !important;position:absolute !important;display:none !important;font-size:20px !important;width:20px !important;height:20px !important;line-height:20px !important;text-align:center !important;background-color:rgba(255,255,255,.8) !important;background-image:url(chrome-extension://mlomiejdfkolichcflejclcbmpeaniij/data/images/gear.svg) !important;background-size:16px 16px !important;background-position:center center !important;background-repeat:no-repeat !important;text-decoration:none !important;}a#yoyfkqasbbkbqqeoytjypvitjfujmjkudi-gear:hover{-webkit-animation-name:popyoyfkqasbbkbqqeoytjypvitjfujmjkudi !important;animation-name:popyoyfkqasbbkbqqeoytjypvitjfujmjkudi !important;-webkit-animation-duration:0.3s !important;animation-duration:0.3s !important;}#yoyfkqasbbkbqqeoytjypvitjfujmjkudi:hover #yoyfkqasbbkbqqeoytjypvitjfujmjkudi-gear{text-decoration:none !important;display:inline-block !important;}@media print{#yoyfkqasbbkbqqeoytjypvitjfujmjkudi{display:none !important;}}
 
 body, #div-login{ 
+=======
+body, #welcome{ 
+>>>>>>> 0715e057b68a99e8ad0901ba9ed4d2ad13d08748
     background: url(../img/bg.jpg) no-repeat center center fixed; 
     -webkit-background-size: cover;
     -moz-background-size: cover;
@@ -107,9 +111,6 @@ body, #div-login{
     height: 43%;
 }
 
-.div-main {
-    display: none;
-}
 .div-main { 
     top: 0;
     left: 0;
@@ -178,4 +179,15 @@ body, #div-login{
 
 .form-signin > input {
 	margin-bottom: 5%;
+}
+@keyframes move {
+    0%   {top: 0px;}
+    25%  {top: 200px;}
+    50%  {top: 100px;}
+    75%  {top: 200px;}
+    100% {top: 0px;}
+}
+
+.form-signin >h1 {
+   animation: move;
 }
