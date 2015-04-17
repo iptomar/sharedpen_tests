@@ -59,6 +59,7 @@ h1, #erro_name {
 }
 
 #contentorListaUsers{
+    font-size: 1.3vmax;
     height: 50%;
     overflow: hidden;
     overflow-y: scroll;
@@ -146,7 +147,15 @@ h1, #erro_name {
     margin-bottom: 5%;
 }
 
+.p_msg_chat { 
+    background: bisque; 
+}
+.p_msg_chat:nth-child(odd) { 
+    background: white; 
+}
+
 .p_msg_chat > p {
+    font-size: 1.2vmax;
     display: inline;
 }
 
