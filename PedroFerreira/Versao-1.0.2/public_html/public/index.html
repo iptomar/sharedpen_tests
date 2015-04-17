@@ -24,7 +24,7 @@ and open the template in the editor.
 </head>
 <body>
 
-  <div class="container">
+  <div class="container-fluid">
     <!--Navigation bar-->
 
 
@@ -41,10 +41,42 @@ and open the template in the editor.
 
     </div>
     <div class="row" id="contentor">
+      <h5 id="atualuser"></h5>
       <div class="col-lg-8">
-        <h4>Texto Colaborativo</h4>
-        <h5 id="atualuser"></h5>
-        <textarea  class="form-control" rows="15" id="msg"></textarea>
+        <!-- TabPane -->
+        <!-- /.panel-heading -->
+        <div class="panel-body">
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#home" data-toggle="tab">Home</a>
+                </li>
+                <li><a href="#profile" data-toggle="tab">Profile</a>
+                </li>
+                <li><a href="#messages" data-toggle="tab">Messages</a>
+                </li>
+                <li><a href="#settings" data-toggle="tab">Settings</a>
+                </li>
+            </ul>
+
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div class="tab-pane " id="home">
+                  <textarea class="form-control" id="msg" rows=15></textarea>
+                </div>
+                <div class="tab-pane fade" id="profile">
+
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                </div>
+                <div class="tab-pane fade" id="messages">
+
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                </div>
+                <div class="tab-pane fade" id="settings">
+
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                </div>
+            </div>
+        </div>
       </div>
       <div class="col-lg-4">
         <div class="well" id="contentorListaUsers">
@@ -55,11 +87,11 @@ and open the template in the editor.
 
           <h4>Chat</h4>
 
-            <textarea  id="panelChat"  rows=8 class="form-control" readonly ></textarea>
-            <br />
-            <div class="form-group">
-              <input id="msgChat" type="text" name="msgChat" class="form-control"  >
-              <button id="btnSendChat" type="button" class="btn btn-default">Send</button>
+          <textarea  id="panelChat"  rows=8 class="form-control" readonly ></textarea>
+          <br />
+          <div class="form-group">
+            <input id="msgChat" type="text" name="msgChat" class="form-control"  >
+            <button id="btnSendChat" type="button" class="btn btn-default">Send</button>
           </div>
         </div>
       </div>
