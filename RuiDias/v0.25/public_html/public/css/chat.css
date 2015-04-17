@@ -1,0 +1,189 @@
+<<<<<<< HEAD
+@-webkit-keyframes popyoyfkqasbbkbqqeoytjypvitjfujmjkudi {
+    50% {
+        -webkit-transform:scale(1.2);
+    }100% {
+        -webkit-transform:scale(1);
+    }
+}
+@keyframes popyoyfkqasbbkbqqeoytjypvitjfujmjkudi {
+    50% {
+        -webkit-transform:scale(1.2);
+        transform:scale(1.2);}
+    100% {
+        -webkit-transform:scale(1);
+        transform:scale(1);}
+}
+#yoyfkqasbbkbqqeoytjypvitjfujmjkudi{
+    padding:0;
+    margin:0;
+    font:13px Arial,Helvetica;
+    text-transform:none;
+    font-size: 100%;
+    vertical-align:baseline;
+    line-height:normal;
+    color:#fff;
+    position:static;
+    border:solid 2px #fff !important;
+    box-sizing:content-box !important;
+    color:#fff !important;
+    display:block !important;
+    height:auto !important;
+    margin:0 !important;
+    opacity:0.9 !important;
+    padding:7px 10px !important;
+    position:fixed !important;
+    visibility:visible !important;
+    width:auto !important;
+    z-index:2147483647 !important;
+    -webkit-border-radius:5px !important;
+    -webkit-box-shadow:0px 0px 20px #000 !important;
+    -webkit-box-sizing:content-box !important;
+}
+.yoyfkqasbbkbqqeoytjypvitjfujmjkudi-blocked{
+    padding:0;
+    margin:0;
+    font:13px Arial,Helvetica;
+    text-transform:none;
+    font-size: 100%;
+    vertical-align:baseline;
+    line-height:normal;
+    color:#fff;
+    position:static;color:#AAA !important;
+    display:inline !important;
+    text-decoration:line-through !important;
+}
+#yoyfkqasbbkbqqeoytjypvitjfujmjkudi br{
+    display:block !important;
+    padding:0;margin:0;
+    font:13px Arial,Helvetica;
+    text-transform:none;
+    font-size: 100%;vertical-align:baseline;line-height:normal;color:#fff;
+    position:static;
+}
+#yoyfkqasbbkbqqeoytjypvitjfujmjkudi span{
+    background:transparent !important;padding:0;
+    margin:0;font:13px Arial,Helvetica;text-transform:none;
+    font-size: 100%;vertical-align:baseline;line-height:normal;
+    color:#fff;position:static;
+}
+#yoyfkqasbbkbqqeoytjypvitjfujmjkudi div{
+    padding:0;margin:0;font:13px Arial,Helvetica;text-transform:none;font-size: 100%;vertical-align:baseline;line-height:normal;color:#fff;position:static;border:0 !important;margin:0 !important;padding:0 !important;width:auto !important;letter-spacing:normal !important;font:13px Arial,Helvetica !important;text-align:left !important;text-shadow:none !important;text-transform:none !important;word-spacing:normal !important;}#yoyfkqasbbkbqqeoytjypvitjfujmjkudi a{padding:0;margin:0;font:13px Arial,Helvetica;text-transform:none;font-size: 100%;vertical-align:baseline;line-height:normal;color:#fff;position:static;font-weight:normal !important;background:none !important;text-decoration:underline !important;color:#fff !important;}a#yoyfkqasbbkbqqeoytjypvitjfujmjkudi-gear{padding:0;margin:0;font:13px Arial,Helvetica;text-transform:none;font-size: 100%;vertical-align:baseline;line-height:normal;color:#fff;position:static;text-decoration:none !important;position:absolute !important;display:none !important;font-size:20px !important;width:20px !important;height:20px !important;line-height:20px !important;text-align:center !important;background-color:rgba(255,255,255,.8) !important;background-image:url(chrome-extension://mlomiejdfkolichcflejclcbmpeaniij/data/images/gear.svg) !important;background-size:16px 16px !important;background-position:center center !important;background-repeat:no-repeat !important;text-decoration:none !important;}a#yoyfkqasbbkbqqeoytjypvitjfujmjkudi-gear:hover{-webkit-animation-name:popyoyfkqasbbkbqqeoytjypvitjfujmjkudi !important;animation-name:popyoyfkqasbbkbqqeoytjypvitjfujmjkudi !important;-webkit-animation-duration:0.3s !important;animation-duration:0.3s !important;}#yoyfkqasbbkbqqeoytjypvitjfujmjkudi:hover #yoyfkqasbbkbqqeoytjypvitjfujmjkudi-gear{text-decoration:none !important;display:inline-block !important;}@media print{#yoyfkqasbbkbqqeoytjypvitjfujmjkudi{display:none !important;}}
+
+body, #div-login{ 
+=======
+body, #welcome{ 
+>>>>>>> 0715e057b68a99e8ad0901ba9ed4d2ad13d08748
+    background: url(../img/bg.jpg) no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+#div-login {
+	width:100%; 
+	height:100%;	
+	position: absolute;
+	top: 0;
+	left: 0;
+	border: 1px solid white;
+	z-index: 100;
+}
+
+#contentor {
+    display: none;
+}
+
+#msg, #panelChat {
+    resize: none;
+}
+
+#divUsers {
+    height: 92%;
+    margin-top: 2.7%;
+}
+#contentorListaUsers{
+    height: 50%;
+    overflow: hidden;
+    overflow-y: scroll;
+}
+#contentorChat {
+    height: 43%;
+}
+
+.div-main { 
+    top: 0;
+    left: 0;
+    height: 21px;
+    width: auto;
+    position: absolute;
+    background: #030405;
+    border: 1px solid #040505;
+    float: left;
+}
+.div-main:after, .div-main:before {
+    right: 100%;
+    top: 0%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+}
+
+.div-main:after {
+    border-color: rgba(3, 4, 5, 0);
+    border-right-color: #030405;
+    border-width: 1px;
+    margin-left: -1px;
+}
+.div-main:before {
+    border-color: rgba(4, 5, 5, 0);
+    border-right-color: #040505;
+    border-width: 11px;
+    margin-left: -11px;
+}
+
+
+.name-user {
+    font-weight: bold;
+    font-family: sans-serif;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    margin: 2px;
+}
+
+.form-signin {
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 15%;
+	width:50%;
+	height: 50%;
+	max-width: 500px;
+}
+
+.form-signin > h1{
+	margin-left: auto;
+	margin-right: auto;
+	text-align: -webkit-center;
+	color:#fff; text-shadow:0 0 10px #fff, 0 0 20px #fff, 0 0 30px #eff, 0 0 40px #eff, 0 0 50px #dff, 0 0 60px #00d2ff, 0 0 70px #00d2ff;
+	text-align: center;
+	margin-bottom: 8%;
+}
+
+.form-signin >input {
+	margin-bottom: 5%;
+}
+@keyframes move {
+    0%   {top: 0px;}
+    25%  {top: 200px;}
+    50%  {top: 100px;}
+    75%  {top: 200px;}
+    100% {top: 0px;}
+}
+
+.form-signin >h1 {
+   animation: move;
+}
