@@ -36,30 +36,35 @@ Server.prototype.start = function () {
         }
 
         socket.emit('welcome', {data: 'welcome'});
-        socket.emit("Tabs", {id: tabsID,
-                             txt: tabsTxt });
         
+        socket.emit("NewTabs",  {
+            txt: tabsTxt,
+            id: tabsID });
         
         socket.on('message', function (data) {
             self.io.sockets.emit('message', data);
         });
+        
         socket.on('msgappend', function (data) {
             var id = data.id;
-            var char = data.data;
+            var char = data.char;
             var pos = data.pos;
-            actualizaTabs(id,char,pos);
-        
+            actualizaTabs(id,char,pos);   
             socket.broadcast.emit('msgappend', data);
         });
+        
         socket.on('mouseMove', function (data) {
             socket.broadcast.emit('mouseMove', data, address.port, socket.id);
         }); 
-        socket.on("TabsChanged", function (data) {
-                 
+        socket.on("TabsChanged", function (data) {    
+              if(data.op == "remover"){
+                  removeTab(data.id);
+              }else{
+                  addTabServer(data.id,data.pos);
+              }
             socket.broadcast.emit("TabsChanged", data);
         });
-        
-        
+            
         socket.on("textExist", function () {
             socket.broadcast.emit("requestOldText");
         });
@@ -89,12 +94,15 @@ module.exports = Server;
         // carater e adiciona-o na posicao coreta
      function actualizaTabs (idd,charr,poss) {
          
-         console.log(idd + "\n" +charr+ "\n" +poss);
-         
-        var id= idd.substring(4)-1;
-        //console.log(id);    
-        var str = tabsTxt[id];
-         var char =charr;
+        var id= idd.substring(4) -1;
+        
+          //console.log( poss);
+         //console.log("texto"+tabsTxt[id-1]  );
+           var str="";
+         if(typeof tabsTxt[id] != "undefined"){
+            str = tabsTxt[id];
+         }
+        var char =charr;
         var pos=poss;
         var str1 = "";
          
@@ -102,17 +110,26 @@ module.exports = Server;
             || char === 46 /* delete */) {
               if (char === 8) {
                 if (pos > 0) {
-                  str1 = str.splice(0, pos - 1) + str.splice(pos);
+                  str1 = str.slice(0, pos - 1) + str.slice(pos);
                 } else {
-                  str1 = str.splice(pos);
+                  str1 = str.slice(pos);
                 }
               } else if (data.data === 46) {
-                str1 = str.splice(0, pos) + str.splice(pos + 1);
+                str1 = str.slice(0, pos) + str.slice(pos + 1);
               }
             } else {
-              //str1 = [str.splice(0, pos), String.fromCharCode(char), str.splice(pos)].join('');
-                //str1=str.splice(0, pos) + String.fromCharCode(char) + str.splice(pos);
-                
+              str1 = [str.slice(0, pos), String.fromCharCode(char), str.slice(pos)].join('');  
             }
             tabsTxt[id] = str1;
           };
+
+
+function addTabServer( id,  pos){
+    tabsID[pos-1] = id;
+    tabsTxt[pos-1] = "";
+}
+function removeTab(id){
+    tabsTxt.splice(tabsID.indexOf("msg"+id), 1);
+    tabsID.splice(tabsID.indexOf("msg"+id), 1);
+
+}

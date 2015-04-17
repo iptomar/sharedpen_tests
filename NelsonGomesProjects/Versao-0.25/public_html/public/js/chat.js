@@ -69,10 +69,7 @@ $(document).ready(function () {
                 'x': 10000,
                 'y': 10000
             });
-            // envia ao servidor o pedido do texto que os outros
-            // utilizadores possuem na textarea
-            socket.emit("textExist");
-//            $("#msg1").focus();
+            $("#msg1").focus();
         } else {
             $("#erro_name").html("Nome Incorreto!");
             setTimeout(function () {
@@ -128,12 +125,13 @@ $(document).ready(function () {
     // recebe o codigo ASCII da tecla recebida, converte-a para
     // carater e adiciona-o na posicao coreta
     socket.on('msgappend', function (data) {
-        var posactual = $("#msg").getCursorPosition();
-        var str = $("#msg").val();
+        var id = data.id;
+        var posactual = $(id).getCursorPosition();
+        var str = $(id).val();
         var str1 = "";
-        if (data.data === 8 /* backspace*/
-                || data.data === 46 /* delete */) {
-            if (data.data === 8) {
+        if (data.char === 8 /* backspace*/
+                || data.char === 46 /* delete */) {
+            if (data.char === 8) {
                 if (data.pos > 0) {
                     str1 = str.slice(0, data.pos - 1) + str.slice(data.pos);
                 } else {
@@ -143,13 +141,31 @@ $(document).ready(function () {
                 str1 = str.slice(0, data.pos) + str.slice(data.pos + 1);
             }
         } else {
-            str1 = [str.slice(0, data.pos), String.fromCharCode(data.data), str.slice(data.pos)].join('');
+            str1 = [str.slice(0, data.pos), String.fromCharCode(data.char), str.slice(data.pos)].join('');
         }
-        $('#msg').val(str1);
+        $(id).val(str1);
         if (posactual < data.pos) {
-            $('#msg').selectRange(posactual);
+            $(id).selectRange(posactual);
         } else {
-            $('#msg').selectRange(posactual - 1);
+            $(id).selectRange(posactual - 1);
+        }
+    });
+
+// Recebe as Tabs quando se connecta
+    socket.on('NewTabs', function (data) {
+        tabsID = data.id;
+        tabsTxt = data.txt;
+        actulizaTabs(tabsTxt, tabsID);
+    });
+
+// envia o codigo ASCII do backspace e do delete
+    $(document.body).on('keydown', '.txtTab', function (event) {
+        if (event.which === 8 || event.which === 46) {
+            socket.emit('msgappend', {
+                'char': event.which,
+                'pos': $("#" + $(this).attr('id')).getCursorPosition(),
+                'id': "#" + $(this).attr('id')
+            });
         }
     });
 
@@ -209,6 +225,7 @@ $(document).ready(function () {
             }
         }
     });
+
 
     socket.on("OldmsgChat", function (data) {
         $("#panelChat").html("");
@@ -274,7 +291,7 @@ $(document).ready(function () {
     socket.on('Tabs', function (data) {
         tabsID = data.id;
         tabsTxt = data.txt;
-        actulizaTabs(tabsTxt);
+        actulizaTabs(tabsTxt, tabsID);
     });
 
 
@@ -311,7 +328,8 @@ $(document).ready(function () {
             //remover ou adicionar
             op: "adicionar",
             //id
-            id: tabsID[tabsID.length]
+            id: "msg" + (tabsID.length),
+            pos: tabsID.length
         });
     });
 
@@ -327,7 +345,6 @@ $(document).ready(function () {
             });
         }
         return false;
-
     });
 });
 
