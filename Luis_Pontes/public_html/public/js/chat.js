@@ -218,16 +218,16 @@ $('#bt_Pvisua').click(function () {
        }
     }*/
     
-    while( i <= x.length){
+ while( i <= x.length){
         
                 for(i; i <= cont; i ++) {
                     aux = aux + x.charAt(i);
                 } 
-      
+        
         doc.text(20, 30+(l*10), aux); 
         l=l+1;
-        cont = cont*2;
-        
+        cont = cont + 40;
+        aux="";
                     
     }
 
