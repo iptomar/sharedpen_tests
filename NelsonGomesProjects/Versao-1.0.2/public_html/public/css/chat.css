@@ -7,6 +7,18 @@ and open the template in the editor.
     Created on : 27/mar/2015, 18:44:53
     Author     : NelsonGomes
 */
+body {
+    background: #392C44;
+}
+
+
+canvas {
+    background: #fff;
+    margin: 20px auto;
+    border: 5px solid #E8E8E8;
+    display: block;}
+
+
 
 #contentor {
     z-index: 1;
