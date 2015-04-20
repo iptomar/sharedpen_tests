@@ -48,6 +48,14 @@ Server.prototype.start = function () {
             socket.broadcast.emit("returnOldText", data);
         });
 
+        socket.on('drawClick', function (data) {
+            socket.broadcast.emit('draw', {
+                x: data.x,
+                y: data.y,
+                type: data.type
+            });
+        });
+
         socket.on('disconnect', function () {
             socket.broadcast.emit('diconnected', socket.id);
             clientes.splice(clientes.indexOf(socket), 1);
