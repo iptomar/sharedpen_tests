@@ -1,54 +1,83 @@
-/*
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
-*/
-/*
-    Created on : 27/mar/2015, 18:44:53
-    Author     : NelsonGomes
-*/
+@-webkit-keyframes popyoyfkqasbbkbqqeoytjypvitjfujmjkudi {
+    50% {
+        -webkit-transform:scale(1.2);
+    }100% {
+        -webkit-transform:scale(1);
+    }
+}
+@keyframes popyoyfkqasbbkbqqeoytjypvitjfujmjkudi {
+    50% {
+        -webkit-transform:scale(1.2);
+        transform:scale(1.2);}
+    100% {
+        -webkit-transform:scale(1);
+        transform:scale(1);}
+}
+
+body, #div-login{ 
+    background: url(../img/bg.jpg) no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+#div-login {
+    width:100%; 
+    height:100%;	
+    position: absolute;
+    top: 0;
+    left: 0;
+    border: 1px solid white;
+    z-index: 100;
+}
 
 #contentor {
-    visibility: hidden;
+    display: none;
 }
 
-/*#contentor {
-    z-index: 1;
+h1, #erro_name {
+    text-align: -webkit-center;
+    color: white; 
+    text-shadow:0 0 10px #fff, 
+        0 0 20px #fff, 0 0 30px #eff, 
+        0 0 40px #eff, 0 0 50px #dff, 
+        0 0 60px #00d2ff, 0 0 70px #00d2ff;
+    text-align: center;
 }
-#contentorListaUsers {
-    border: 1px solid black;
-    float: left;
-    margin-left: 5px;
+
+.txtTab, #panelChat {
+    resize: none;
+}
+
+#atualuser {
+    color: white;
+}
+
+#divUsers {
+    height: 91.5%;
+    margin-top: 3.5%;
+}
+
+#contentorListaUsers{
+    font-size: 1.3vmax;
+    height: 50%;
     overflow: hidden;
+    overflow-y: scroll;
 }
 
-#listaUsers {
-    font-size: 2vmax;
+#contentorChat {
+    height: 44%;
 }
-
-#listaUsers > p, #contentorListaUsers > p {
-    margin: 0 !important;
-    border-bottom: 1px solid black;
+#panelChat {
+    height: 53%;
+    overflow: hidden;
+    overflow-y: scroll;
 }
-
-#listaUsers > p:hover {
-    background-color: bisque;
-}
-
-.imguser {
-    width: 15%;
-    height: auto;
-    padding-right: 5px;
-    padding-left: 5px;
-    padding-top: 2px;
-}
-
-#div-login{
-    visibility: visible;
-}
-
 
 .div-main {
+    display: none;
+}
+.div-main { 
     top: 0;
     left: 0;
     height: 21px;
@@ -92,31 +121,56 @@ and open the template in the editor.
     margin: 2px;
 }
 
-#msg {
-    border: 1px solid black;
-    float: left;
+.form-signin {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 15%;
+    width:50%;
+    height: 50%;
+    max-width: 500px;
 }
 
-a.btnstyles {
-    width: 30px;
+.form-signin > h1{
+    margin-left: auto;
+    margin-right: auto;
+    text-align: -webkit-center;
+    color:#fff; 
+    text-shadow:0 0 10px #fff, 
+        0 0 20px #fff, 0 0 30px #eff, 
+        0 0 40px #eff, 0 0 50px #dff, 
+        0 0 60px #00d2ff, 0 0 70px #00d2ff;
+    text-align: center;
+    margin-bottom: 8%;
+}
+
+.form-signin > input {
+    margin-bottom: 5%;
+}
+
+.p_msg_chat { 
+    background: bisque; 
+}
+.p_msg_chat:nth-child(odd) { 
+    background: white; 
+}
+
+.p_msg_chat > p {
+    font-size: 1.2vmax;
+    display: inline;
+}
+
+.user_chat {
+    margin-right: 5px;
+}
+
+.msg_chat {
+    margin-left: 5px;
+}
+
+#colorpicker {
+    position: fixed;
+    left: 88%;
+    top: 1%;
     height: 30px;
+    width: 150px;
 }
-
-select.btnstyles {
-    height: 25px;
-}
-
-.btnstyles {
-    background: #ccc;
-    cursor: pointer;
-}
-
-.btnstyles:active {
-    -webkit-box-shadow: inset 1px 1px 30px 1px rgba(50, 50, 50, 1);
-    -moz-box-shadow:    inset 1px 1px 30px 1px rgba(50, 50, 50, 1);
-    box-shadow:         inset 1px 1px 30px 1px rgba(50, 50, 50, 1);
-}
-
-.#panelChat{
-   overflow-y: scroll;
-}*/
