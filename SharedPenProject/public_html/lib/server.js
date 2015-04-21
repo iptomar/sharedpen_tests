@@ -1,7 +1,9 @@
+/* global module */
+var clients = new Array();
+
 var express = require('express');
 var http = require('http');
 var socketio = require('socket.io');
-var clientes = [];
 var numclientes = 0;
 var msgChat = "";
 var color = "default";
@@ -24,20 +26,35 @@ Server.prototype.start = function () {
     this.io.on('connection', function (socket) {
 
         var address = socket.request.connection._peername;
-        console.log('**********************************************************');
-        console.log('Nova ligacao do endereco -> ' + address.address + " : " + address.port);
-        console.log('**********************************************************');
-        if (typeof clientes[socket.id] === "undefined") {
-            clientes[socket.id] = socket.id;
-            console.log("Socket id Adicionado - " + socket.id);
+        socket.on("useron", function (data) {
+            for (var i = 0, max = clients.length; i < max; i++) {
+                var u = clients[i];
+                socket.emit('useron', u.name, u.port, u.socket);
+            }
+            var user = {
+                name: data,
+                port: address.port,
+                socket: socket.id
+            };
+            
+            socket.broadcast.emit('useron', user.name, user.port, user.socket);
+            
+            clients.push(user);
             ++numclientes;
-        }
-
-        socket.emit('welcome', {data: 'welcome'});
-//        console.log("-.-----------" + tabsID + " - " + tabsTxt);
-        socket.emit("NewTabs", {
-            txt: tabsTxt,
-            id: tabsID
+            console.log('+++++++++++++++++++++ ADD +++++++++++++++++++++');
+            console.log("Client     - " + user.name +
+                    "\nPort       - " + user.port +
+                    "\nSocket id  - " + user.socket);
+            console.log('+++++++++++++++++++++++++++++++++++++++++++++++');
+            
+            socket.emit("NewTabs", {
+                txt: tabsTxt,
+                id: tabsID
+            });
+            
+            socket.emit('OldmsgChat', msgChat);
+            
+            socket.emit('getcolor', {'cor': color});
         });
 
         socket.on('message', function (data) {
@@ -53,10 +70,6 @@ Server.prototype.start = function () {
             socket.broadcast.emit('msgappend', data);
         });
 
-        socket.on('mouseMove', function (data) {
-            socket.broadcast.emit('mouseMove', data, address.port, socket.id);
-        });
-
         socket.on("TabsChanged", function (data) {
             if (data.op == "remover") {
                 removeTab(data.id);
@@ -70,13 +83,9 @@ Server.prototype.start = function () {
             socket.broadcast.emit("requestOldText");
         });
 
-        socket.emit('OldmsgChat', msgChat);
-
         socket.on("returnOldText", function (data) {
             socket.broadcast.emit("returnOldText", data);
         });
-
-        socket.emit('getcolor', {'cor': color});
 
         socket.on('setcolor', function (data) {
             color = data.cor;
@@ -85,14 +94,20 @@ Server.prototype.start = function () {
 
         socket.on('disconnect', function () {
             socket.broadcast.emit('diconnected', socket.id);
-            clientes.splice(clientes.indexOf(socket), 1);
+            var usr = objectFindByKey(clients, "socket", socket.id)
+            console.log('------------------- REMOVE --------------------');
+            console.log("Client     - " + usr.name +
+                    "\nPort       - " + usr.port +
+                    "\nSocket id  - " + usr.socket);
+            console.log('-----------------------------------------------');
+            clients.splice(clients.indexOf(usr), 1);
             console.log("Socket id removido - " + socket.id);
             --numclientes;
             if (numclientes <= 0) {
                 console.log("Sem Clientes ligado");
                 msgChat = "";
-                clientes = [];
                 numclientes = 0;
+                clients = new Array();
                 color = "default";
                 tabsID = [];
                 tabsTxt = [];
@@ -146,4 +161,13 @@ function removeTab(id) {
     tabsTxt.splice(tabsID.indexOf("msg" + id), 1);
     tabsID.splice(tabsID.indexOf("msg" + id), 1);
 
+}
+
+function objectFindByKey(array, key, value) {
+    for (var i = 0; i < array.length; i++) {
+        if (array[i][key] === value) {
+            return array[i];
+        }
+    }
+    return null;
 }

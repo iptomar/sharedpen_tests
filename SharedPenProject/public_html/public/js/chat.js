@@ -63,12 +63,9 @@ $(document).ready(function () {
                     "Utilizador <u><i><b>" +
                     username +
                     "</b></i></u>");
-            // envia o nome do utilizdore a posicao do mouse
-            socket.emit('mouseMove', {
-                'user': username,
-                'x': 10000,
-                'y': 10000
-            });
+            
+            socket.emit("myname", username);
+            
             $("#msg1").focus();
         } else {
             $("#erro_name").html("Nome Incorreto!");
@@ -90,15 +87,6 @@ $(document).ready(function () {
     // *******************************************************************
     // dados enviadas pelo socket para o servidor
     // *******************************************************************
-    // evia as cordenados do ponteiro do rato e do nome do utilizador
-    $(window).on("mousemove", function (event) {
-        socket.emit('mouseMove', {
-            'user': username,
-            'x': event.pageX,
-            'y': event.pageY
-        });
-    });
-
     // envia o codigo ASCII do backspace e do delete
     $(document.body).on('keydown', '.txtTab', function (event) {
         if (event.which === 8 || event.which === 46) {
@@ -171,28 +159,22 @@ $(document).ready(function () {
 
     // recebe as cordenadas dos outros utilizadores e movimenta a label dele
     // conforme as coordenadas recebidas
-    socket.on('mouseMove', function (data, port, socketid) {
-        if (data.user !== "") {
+    socket.on('useron', function (data, port, socketid) {
+        if (data !== "") {
             if (typeof users[socketid] === "undefined") {
-//                $("body").append(
-//                        '<div id="' +
-//                        socketid +
-//                        '" class="div-main ' +
-//                        socketid +
-//                        '"><p class="name-user"></p></div>');
-                users[socketid] = new Client($("#" + socketid), data.user, port, socketid);
+                users[socketid] = new Client($("#" + socketid), data, port, socketid);
                 $("#listaUsers").append(
                         "<p class='" +
                         socketid +
                         "'><img class='imguser' src='./img/user.png'>" +
-                        data.user +
+                        data +
                         "</p>");
 
                 toastr.success(data.user, 'Online');
-                users[socketid].setName(data.user);
+                users[socketid].setName(data);
             } else {
                 users[socketid].setSocketId(socketid);
-                users[socketid].setPosition(data.x, data.y);
+//                users[socketid].setPosition(data.x, data.y);
             }
         }
     });

@@ -74,53 +74,6 @@ h1, #erro_name {
     overflow-y: scroll;
 }
 
-.div-main {
-    display: none;
-}
-.div-main { 
-    top: 0;
-    left: 0;
-    height: 21px;
-    width: auto;
-    position: absolute;
-    background: #030405;
-    border: 1px solid #040505;
-    float: left;
-}
-.div-main:after, .div-main:before {
-    right: 100%;
-    top: 0%;
-    border: solid transparent;
-    content: " ";
-    height: 0;
-    width: 0;
-    position: absolute;
-    pointer-events: none;
-}
-
-.div-main:after {
-    border-color: rgba(3, 4, 5, 0);
-    border-right-color: #030405;
-    border-width: 1px;
-    margin-left: -1px;
-}
-.div-main:before {
-    border-color: rgba(4, 5, 5, 0);
-    border-right-color: #040505;
-    border-width: 11px;
-    margin-left: -11px;
-}
-
-
-.name-user {
-    font-weight: bold;
-    font-family: sans-serif;
-    padding: 0;
-    margin: 0;
-    border: 0;
-    margin: 2px;
-}
-
 .form-signin {
     margin-left: auto;
     margin-right: auto;
