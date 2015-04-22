@@ -14,6 +14,7 @@ function Draw(pai, id) {
             last_mouse.y = mouse.y;
 
             mouse.x = e.pageX - this.offsetLeft;
+			//mouse.x  = (e.pageX - this.canvas.offset().left) + $(window).scrollLeft;
             mouse.y = e.pageY - this.offsetTop;
         }, false);
         this.canvas.addEventListener('mousedown', function (e) {

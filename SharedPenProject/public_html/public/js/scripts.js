@@ -143,15 +143,23 @@ $(document).ready(function () {
         }
     });
     $(document.body).on('mouseover', 'canvas', function (event) {
+		
+       	$("body").find("#toolbar").remove();
+		
         var canvasId = $(this).attr("id");
         var pos = $(this).position();
         $.get("../html/pallet.html", function (data) {
-            $("body").append(data);
+            $("#contentor").append(data);
         });
-        $(document.body).find("#toolbar").css({
-            top: pos.top + $(document.body).find("#toolbar").height() * 0.55,
+        $("#toolbar").css({
+            top: pos.top + $(document.body).find("#canvas").height() * 0.55,
             left: pos.left + $(this).width() / 2 - $(document.body).find("#toolbar").width() / 2
         });
+    });
+	
+	 $(document.body).on('mouseout', 'canvas', function (event) {
+       	$("body").find("#toolbar").remove();
+		 //$(document.body).remove( "#toolbar" );
     });
 
     $(document.body).on('click', '#closePallet', function (event) {
