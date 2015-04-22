@@ -31,24 +31,18 @@ $(document).ready(function () {
         "hideEasing": "linear",
         "showMethod": "fadeIn"
     };
-
-
     // cria a ligação com o servidor que disponibiliza o socket
     socket = io.connect(window.location.href);
-
     // Carrega o dropdown com a liosta das cores
     $('#colorpicker').addAllColors(listaColor);
-
     // coloca o cursor para introduzir o nome do utilizador
     $("#username").focus();
-
     // ao carregar em enter no nome do utilizador carrega no button
     $("#username").keydown(function (event) {
         if (event.keyCode === 13) {
             $("#startlogin").click();
         }
     });
-
     // evento de carregar no button para fazer o login
     $("#startlogin").click(function () {
         username = $("#username").val();
@@ -63,9 +57,7 @@ $(document).ready(function () {
                     "Utilizador <u><i><b>" +
                     username +
                     "</b></i></u>");
-            
             socket.emit("myname", username);
-            
             $("#msg1").focus();
         } else {
             $("#erro_name").html("Nome Incorreto!");
@@ -81,9 +73,7 @@ $(document).ready(function () {
             }, 500);
         }
     });
-
     ajustElements();
-
     // *******************************************************************
     // dados enviadas pelo socket para o servidor
     // *******************************************************************
@@ -97,7 +87,6 @@ $(document).ready(function () {
             });
         }
     });
-
     // envia o codigo ASCII das teclas carregadas
     $(document.body).on('keypress', '.txtTab', function (event) {
         socket.emit('msgappend', {
@@ -106,7 +95,6 @@ $(document).ready(function () {
             'id': "#" + $(this).attr('id')
         });
     });
-
     // *******************************************************************
     // dados recebidos pelo socket para o browser
     // *******************************************************************
@@ -138,14 +126,12 @@ $(document).ready(function () {
             $(id).selectRange(posactual - 1);
         }
     });
-
 // Recebe as Tabs quando se connecta
     socket.on('NewTabs', function (data) {
         tabsID = data.id;
         tabsTxt = data.txt;
         actulizaTabs(tabsTxt, tabsID);
     });
-
 // envia o codigo ASCII do backspace e do delete
     $(document.body).on('keydown', '.txtTab', function (event) {
         if (event.which === 8 || event.which === 46) {
@@ -156,7 +142,53 @@ $(document).ready(function () {
             });
         }
     });
+    $(document.body).on('mouseover', 'canvas', function (event) {
+        var canvasId = $(this).attr("id");
+        var pos = $(this).position();
+        $.get("../html/pallet.html", function (data) {
+            $("body").append(data);
+        });
+        $(document.body).find("#toolbar").css({
+            top: pos.top + $(document.body).find("#toolbar").height() * 0.55,
+            left: pos.left + $(this).width() / 2 - $(document.body).find("#toolbar").width() / 2
+        });
+    });
 
+    $(document.body).on('click', '#closePallet', function (event) {
+        $(document.body).find("#toolbar").remove();
+    });
+
+    $(document.body).on('click', '.color_canvas', function (event) {
+        var d = getDrawObj();
+        d.setColor($(this).attr("id"));
+    });
+
+    $(document.body).on('mousedown mousemove mouseup', "#tab1-canvas1", function (e) {
+        $(document.body).on('mousemove', "#tab1-canvas1", function (e) {
+
+            var d = getDrawObj();
+            var offset, type, x, y;
+            type = e.handleObj.type;
+            offset = $(this).offset();
+            x = e.pageX - offset.left;
+            y = e.pageY - offset.top;
+            console.log(x + "- " + y + " - " + type);
+            d.draw(x, y, type);
+            socket.emit('drawClick', {
+                x: x,
+                y: y,
+                type: type
+            });
+            $(document.body).on('mouseup', "#tab1-canvas1", function (e) {
+                flag = false;
+            });
+        });
+    });
+
+    socket.on('draw', function (data) {
+        var d = getDrawObj();
+        d.draw(data.x, data.y, data.type);
+    });
     // recebe as cordenadas dos outros utilizadores e movimenta a label dele
     // conforme as coordenadas recebidas
     socket.on('useron', function (data, port, socketid) {
@@ -169,16 +201,13 @@ $(document).ready(function () {
                         "'><img class='imguser' src='./img/user.png'>" +
                         data +
                         "</p>");
-
-                toastr.success(data.user, 'Online');
+                toastr.success(data, 'Online');
                 users[socketid].setName(data);
             } else {
                 users[socketid].setSocketId(socketid);
-//                users[socketid].setPosition(data.x, data.y);
             }
         }
     });
-
     // devolve para o servidor de todo o texto da textarea e da
     // posicao do mouse
     socket.on("requestOldText", function () {
@@ -190,25 +219,21 @@ $(document).ready(function () {
             data: tabsTxt
         });
     });
-
     // atualiza a textarea com o texto ja existente na textarea dos
     // outro utilizadores
     socket.on("returnOldText", function (data) {
         $("#msg").html("");
         $("#msg").val(data.data);
     });
-
     socket.on("TabsChanged", function (data) {
         if ($.trim(username) !== "") {
             if (data.op === "remover") {
                 removeTab(tabsID, data.id);
             } else {
-                Addtab(tabsID);
+                Addtab(tabsID, data.id);
             }
         }
     });
-
-
     socket.on("OldmsgChat", function (data) {
         $("#panelChat").html("");
         var aux = data.split(",");
@@ -224,7 +249,6 @@ $(document).ready(function () {
             scrollTop: $('#panelChat').prop("scrollHeight")
         }, 500);
     });
-
     // Apaga a informacao referente ao utilizador que se desconectou
     socket.on('diconnected', function (socketid) {
         for (var item in users) {
@@ -236,17 +260,14 @@ $(document).ready(function () {
             }
         }
     });
-
     //Para Chat
     socket.on('message', function (data) {
         $('#panelChat').addNewText(data.user, data.data);
-
 //        $('#panelChat').val($('#panelChat').val() + data.user + " : " + data.data + '\n');
         $('#panelChat').animate({
             scrollTop: $('#panelChat').prop("scrollHeight")
         }, 500);
     });
-
     socket.on('getcolor', function (data) {
         if (data.cor === "default") {
             $('body').css('background-image', 'url(../img/bg.jpg)');
@@ -268,16 +289,12 @@ $(document).ready(function () {
         }
         $("#colorpicker").val(data.cor);
     });
-
     // Recebe as Tabs quando se connecta
     socket.on('Tabs', function (data) {
         tabsID = data.id;
         tabsTxt = data.txt;
         actulizaTabs(tabsTxt, tabsID);
     });
-
-
-
     $('#btnSendChat').click(function () {
         var chatMessage = $('#msgChat').val();
         //limpa input
@@ -288,23 +305,18 @@ $(document).ready(function () {
             });
         $('#msgChat').val('');
     });
-
     $('#msgChat').keydown(function (e) {
         if (e.keyCode === 13) {
             $('#btnSendChat').click();
         }
     });
-
     $("#colorpicker").change(function () {
         socket.emit('setcolor', {
             cor: $(this).find('option:selected').val()
         });
     });
-
-    // Evento "click" no separador "+ PÃ¡g."
-    $('#tabs a[href="#add-page"]').on('click', function () {
-        // Conta quantos <li>(separadores) hÃ¡ (menos 1 por causa do separador "+ PÃ¡g")
-        Addtab(tabsID);
+    $(document.body).on('click', ".btnmodels", function () {
+        Addtab(tabsID, $(this).data('model'));
         $("#li-last").attr('class', '');
         socket.emit('TabsChanged', {
             //remover ou adicionar
@@ -313,8 +325,20 @@ $(document).ready(function () {
             id: "msg" + (tabsID.length),
             pos: tabsID.length
         });
+        $(document.body).find("#divchangemodel").remove();
     });
+    // Evento "click" no separador "+ Pág."
+    $('#tabs a[href="#add-page"]').on('click', function () {
+// Conta quantos <li>(separadores) hÃ¡ (menos 1 por causa do separador "+ PÃ¡g")
+// Conta quantos <li>(separadores) hÃ¡ (menos 1 por causa do separador "+ PÃ¡g")
 
+        $.get("../html/painel-models.html", function (data) {
+            $("body").append(data);
+        });
+    });
+    $(document.body).on('click', '#btncancelmodels', function () {
+        $(document.body).find("#divchangemodel").remove();
+    });
     $(document.body).on('click', '.xtab', function (event) {
         liElem = $(this).attr('id');
         if (confirm("Tem a certeza que quer apagar?")) { // Mostra "Tem a certeza que quer apagar?" e espera que se carregue em "Ok"
@@ -329,7 +353,6 @@ $(document).ready(function () {
         return false;
     });
 });
-
 $(window).resize(function () {
     ajustElements();
 });

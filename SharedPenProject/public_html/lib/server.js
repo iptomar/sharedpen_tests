@@ -26,7 +26,7 @@ Server.prototype.start = function () {
     this.io.on('connection', function (socket) {
 
         var address = socket.request.connection._peername;
-        socket.on("useron", function (data) {
+        socket.on("myname", function (data) {
             for (var i = 0, max = clients.length; i < max; i++) {
                 var u = clients[i];
                 socket.emit('useron', u.name, u.port, u.socket);
@@ -36,9 +36,9 @@ Server.prototype.start = function () {
                 port: address.port,
                 socket: socket.id
             };
-            
+
             socket.broadcast.emit('useron', user.name, user.port, user.socket);
-            
+
             clients.push(user);
             ++numclientes;
             console.log('+++++++++++++++++++++ ADD +++++++++++++++++++++');
@@ -46,14 +46,14 @@ Server.prototype.start = function () {
                     "\nPort       - " + user.port +
                     "\nSocket id  - " + user.socket);
             console.log('+++++++++++++++++++++++++++++++++++++++++++++++');
-            
+
             socket.emit("NewTabs", {
                 txt: tabsTxt,
                 id: tabsID
             });
-            
+
             socket.emit('OldmsgChat', msgChat);
-            
+
             socket.emit('getcolor', {'cor': color});
         });
 
@@ -92,26 +92,41 @@ Server.prototype.start = function () {
             self.io.sockets.emit('getcolor', data);
         });
 
+        socket.on('drawClick', function (data) {
+            console.log("->\nX - " + data.x + "\nY - " + data.y + "\nType - " + data.type);
+            socket.broadcast.emit('draw', {
+                x: data.x,
+                y: data.y,
+                type: data.type
+            });
+        });
+
         socket.on('disconnect', function () {
             socket.broadcast.emit('diconnected', socket.id);
             var usr = objectFindByKey(clients, "socket", socket.id)
-            console.log('------------------- REMOVE --------------------');
-            console.log("Client     - " + usr.name +
-                    "\nPort       - " + usr.port +
-                    "\nSocket id  - " + usr.socket);
-            console.log('-----------------------------------------------');
-            clients.splice(clients.indexOf(usr), 1);
-            console.log("Socket id removido - " + socket.id);
-            --numclientes;
-            if (numclientes <= 0) {
-                console.log("Sem Clientes ligado");
-                msgChat = "";
-                numclientes = 0;
-                clients = new Array();
-                color = "default";
-                tabsID = [];
-                tabsTxt = [];
+            if (usr !== null) {
+                console.log('------------------- REMOVE --------------------');
+                console.log("Client     - " + usr.name +
+                        "\nPort       - " + usr.port +
+                        "\nSocket id  - " + usr.socket);
+                console.log('-----------------------------------------------');
+                clients.splice(clients.indexOf(usr), 1);
+                console.log("Socket id removido - " + socket.id);
+                --numclientes;
+                if (numclientes <= 0) {
+                    console.log("Sem Clientes ligado");
+                    msgChat = "";
+                    numclientes = 0;
+                    clients = new Array();
+                    color = "default";
+                    tabsID = [];
+                    tabsTxt = [];
+                }
+            } else {
+                console.log('------------ O Cliente ja nao existe ----------');
+                console.log('----------------- SharedPen On ----------------');
             }
+
         });
     });
     console.log('Server do SharedPen On!');

@@ -119,11 +119,3 @@ h1, #erro_name {
 .msg_chat {
     margin-left: 5px;
 }
-
-#colorpicker {
-    position: fixed;
-    left: 88%;
-    top: 1%;
-    height: 30px;
-    width: 150px;
-}
