@@ -4,17 +4,17 @@ function Draw(pai, id) {
     this.id = id;
     this.canvas;
     this.crx;
+    this.paint = false;
+    this.canvas = document.getElementById(this.id);
     var mouse = {x: 0, y: 0};
     var last_mouse = {x: 0, y: 0};
     this.init = function () {
-        this.canvas = document.getElementById(this.id);
 
         this.canvas.addEventListener('mousemove', function (e) {
             last_mouse.x = mouse.x;
             last_mouse.y = mouse.y;
 
             mouse.x = e.pageX - this.offsetLeft;
-			//mouse.x  = (e.pageX - this.canvas.offset().left) + $(window).scrollLeft;
             mouse.y = e.pageY - this.offsetTop;
         }, false);
         this.canvas.addEventListener('mousedown', function (e) {
@@ -35,23 +35,13 @@ function Draw(pai, id) {
     this.setColor = function (color) {
         this.ctx.strokeStyle = color;
     };
-    
+
     this.draw = function () {
         this.ctx.beginPath();
         this.ctx.moveTo(last_mouse.x, last_mouse.y);
         this.ctx.lineTo(mouse.x, mouse.y);
         this.ctx.closePath();
         this.ctx.stroke();
-
-//            if (type === "dragstart") {
-//                this.ctx.beginPath();
-//                return this.ctx.moveTo(x, y);
-//            } else if (type === "drag") {
-//                this.ctx.lineTo(x, y);
-//                return this.ctx.stroke();
-//            } else {
-//                return this.ctx.closePath();
-//            }
     };
 
 
@@ -69,32 +59,32 @@ function Draw(pai, id) {
 //    this.prevY = 0;
 //    this.currY = 0;
 //    this.dot_flag = false;
+//    this.canvas = document.getElementById(this.id);
 //
 //    this.x = "black";
 //    this.y = 2;
 //
 //    this.init = function () {
-//        this.canvas = document.getElementById(this.id);
-//        this.ctx = this.canvas.getContext('2d');
-//        this.w = this.canvas.width;
-//        this.h = this.canvas.height;
 //
-//        this.pai.find(this.id).on("mousemove", function (e) {
+//        this.canvas.addEventListener("mousemove", function (e) {
 //            alert("move");
 //            this.findxy('move', e);
 //        }, false);
-//        this.pai.find(this.id).on("mousedown", function (e) {
+//        this.canvas.addEventListener("mousedown", function (e) {
 //            this.findxy('down', e);
 //        }, false);
-//        this.pai.find(this.id).on("mouseup", function (e) {
+//        this.canvas.addEventListener("mouseup", function (e) {
 //            this.findxy('up', e);
 //        }, false);
-//        this.pai.find(this.id).on("mouseout", function (e) {
+//        this.canvas.addEventListener("mouseout", function (e) {
 //            this.findxy('out', e);
 //        }, false);
+//        this.ctx = this.canvas.getContext('2d');
+//        this.w = this.canvas.width;
+//        this.h = this.canvas.height;
 //    };
 //
-//    this.color = function(obj) {
+//    this.color = function (obj) {
 //        switch (obj) {
 //            case "green":
 //                this.x = "green";

@@ -143,9 +143,9 @@ $(document).ready(function () {
         }
     });
     $(document.body).on('mouseover', 'canvas', function (event) {
-		
-       	$("body").find("#toolbar").remove();
-		
+
+        $("body").find("#toolbar").remove();
+
         var canvasId = $(this).attr("id");
         var pos = $(this).position();
         $.get("../html/pallet.html", function (data) {
@@ -156,10 +156,10 @@ $(document).ready(function () {
             left: pos.left + $(this).width() / 2 - $(document.body).find("#toolbar").width() / 2
         });
     });
-	
-	 $(document.body).on('mouseout', 'canvas', function (event) {
-       	$("body").find("#toolbar").remove();
-		 //$(document.body).remove( "#toolbar" );
+
+    $(document.body).on('mouseout', 'canvas', function (event) {
+        $("body").find("#toolbar").remove();
+        //$(document.body).remove( "#toolbar" );
     });
 
     $(document.body).on('click', '#closePallet', function (event) {
@@ -171,25 +171,19 @@ $(document).ready(function () {
         d.setColor($(this).attr("id"));
     });
 
-    $(document.body).on('mousedown mousemove mouseup', "#tab1-canvas1", function (e) {
-        $(document.body).on('mousemove', "#tab1-canvas1", function (e) {
-
-            var d = getDrawObj();
-            var offset, type, x, y;
-            type = e.handleObj.type;
-            offset = $(this).offset();
-            x = e.pageX - offset.left;
-            y = e.pageY - offset.top;
-            console.log(x + "- " + y + " - " + type);
-            d.draw(x, y, type);
-            socket.emit('drawClick', {
-                x: x,
-                y: y,
-                type: type
-            });
-            $(document.body).on('mouseup', "#tab1-canvas1", function (e) {
-                flag = false;
-            });
+    $(document.body).on('mousedown mousemove mouseup mouseout', "#tab1-canvas1", function (e) {
+        var d = getDrawObj();
+        var offset, type, x, y;
+        type = e.handleObj.type;
+        offset = $(this).offset();
+        x = e.pageX - offset.left;
+        y = e.pageY - offset.top;
+        d.draw(x, y, type);
+//        d.init();
+        socket.emit('drawClick', {
+            x: x,
+            y: y,
+            type: type
         });
     });
 
