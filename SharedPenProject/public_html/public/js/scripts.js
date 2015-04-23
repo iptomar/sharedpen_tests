@@ -328,7 +328,6 @@ $(document).ready(function () {
             pos: tabsID.length
         });
         $(document.body).find("#divchangemodel").remove();
-		console.log('#tabs + li:last---------  '+$(document.body).find("a[href^='#page']:last").html());
 		// Foco na ultima pagina adicionada
 		$(document.body).find("a[href^='#page']:last").click();
     });

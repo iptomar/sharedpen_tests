@@ -38,6 +38,7 @@
     height: 400px;
     margin-top: 5%;
     resize: none;
+	border: 1px solid black;
 }
 
 .tabpage2 > img {
