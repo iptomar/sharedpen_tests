@@ -45,9 +45,9 @@
     border:1px solid black;
 }
 #canvasimg {
-    position:absolute;
+/*    position:absolute;
     top:10%;
-    left:52%;
+    left:52%;*/
     display:none;
 }
 #btn, #clr, #closePallet {

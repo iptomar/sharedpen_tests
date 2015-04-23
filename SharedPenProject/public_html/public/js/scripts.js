@@ -142,36 +142,35 @@ $(document).ready(function () {
             });
         }
     });
-    $(document.body).on('mouseover', 'canvas', function (event) {
+//    $(document.body).on('mouseover', 'canvas', function (event) {
+//
+//        $("body").find("#toolbar").remove();
+//
+//        var canvasId = $(this).attr("id");
+//        var pos = $(this).position();
+//        $.get("../html/pallet.html", function (data) {
+//            $("#contentor").append(data);
+//        });
+//        $("#toolbar").css({
+//            top: pos.top + $(document.body).find("#canvas").height() * 0.55,
+//            left: pos.left + $(this).width() / 2 - $(document.body).find("#toolbar").width() / 2
+//        });
+//    });
 
-        $("body").find("#toolbar").remove();
+//    $(document.body).on('mouseout', 'canvas', function () {
+//        $("body").find("#toolbar").remove();
+//    });
 
-        var canvasId = $(this).attr("id");
-        var pos = $(this).position();
-        $.get("../html/pallet.html", function (data) {
-            $("#contentor").append(data);
-        });
-        $("#toolbar").css({
-            top: pos.top + $(document.body).find("#canvas").height() * 0.55,
-            left: pos.left + $(this).width() / 2 - $(document.body).find("#toolbar").width() / 2
-        });
-    });
-
-    $(document.body).on('mouseout', 'canvas', function (event) {
-        $("body").find("#toolbar").remove();
-        //$(document.body).remove( "#toolbar" );
-    });
-
-    $(document.body).on('click', '#closePallet', function (event) {
+    $(document.body).on('click', '#closePallet', function () {
         $(document.body).find("#toolbar").remove();
     });
 
-    $(document.body).on('click', '.color_canvas', function (event) {
+    $(document.body).on('click', '.color_canvas', function () {
         var d = getDrawObj();
         d.setColor($(this).attr("id"));
     });
 
-    $(document.body).on('mousedown mousemove mouseup mouseout', "#tab1-canvas1", function (e) {
+    $(document.body).on('mousedown mousemove mouseup mouseout mouseover mouseout', "#tab1-canvas1", function (e) {
         var d = getDrawObj();
         var offset, type, x, y;
         type = e.handleObj.type;

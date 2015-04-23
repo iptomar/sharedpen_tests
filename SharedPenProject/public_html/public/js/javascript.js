@@ -109,6 +109,7 @@ function Addtab(tabsID, html) {
 function refactorTab(html, idNum) {
     var newElem = "";
     $.get("./html_models/" + html, function (data) {
+        alert(data);
         var a = data.split("\n");
         $.each(a, function () {
             if (this.indexOf("id=") >= 0) {
@@ -119,12 +120,17 @@ function refactorTab(html, idNum) {
         });
 
         $(".txtTab" + idNum).html(newElem);
-        drawimg = new Draw($(".txtTab" + idNum), "tab1-canvas1");
-        drawimg.init();
+
+        $(".txtTab" + idNum).each(function () {
+            alert(this.children());
+        });
+//        drawimg = new Draw($(".txtTab" + idNum), "tab1-canvas1");
+//        drawimg.init();
     });
+
 }
 var drawimg;
-function getDrawObj () {
+function getDrawObj() {
     return drawimg;
 }
 
@@ -183,7 +189,7 @@ function hexToRgb(hex, s, n) {
     return r + "," + g + "," + b;
 }
 
-function changecolordraw(id){
+function changecolordraw(id) {
     drawimg.color(id);
 }
 
