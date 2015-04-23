@@ -327,6 +327,8 @@ $(document).ready(function () {
             pos: tabsID.length
         });
         $(document.body).find("#divchangemodel").remove();
+		// Foco na ultima pagina adicionada
+		$(document.body).find("a[href^='#page']:last").click();
     });
     // Evento "click" no separador "+ Pág."
     $('#tabs a[href="#add-page"]').on('click', function () {
