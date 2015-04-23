@@ -142,6 +142,8 @@ $(document).ready(function () {
             });
         }
     });
+
+
     $(document.body).on('mouseover', 'canvas', function (event) {
 
         $("body").find("#toolbar").remove();
