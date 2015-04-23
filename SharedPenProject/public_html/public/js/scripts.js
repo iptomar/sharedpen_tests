@@ -143,6 +143,7 @@ $(document).ready(function () {
             });
         }
     });
+<<<<<<< HEAD
 //    $(document.body).on('mouseover', 'canvas', function (event) {
 //
 //        $("body").find("#toolbar").remove();
@@ -157,6 +158,11 @@ $(document).ready(function () {
 //            left: pos.left + $(this).width() / 2 - $(document.body).find("#toolbar").width() / 2
 //        });
 //    });
+=======
+
+
+    $(document.body).on('mouseover', 'canvas', function (event) {
+>>>>>>> cc8095371cacc0e4bcf6ac45019b856ba47b6f7c
 
 //    $(document.body).on('mouseout', 'canvas', function () {
 //        $("body").find("#toolbar").remove();

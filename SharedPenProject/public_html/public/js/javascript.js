@@ -135,6 +135,7 @@ function getArrayDrawObj(id) {
 }
 
 function removeTab(tabsID, liElem) { // FunÃ§Ã£o que remove separador com o numero de <li>
+	
     $('ul#tabs > li#li' + liElem).fadeOut(1000, function () {
         $(this).remove(); // Apaga o <li></li>(separador) com um efeito fadeout
     });
@@ -164,7 +165,13 @@ function removeTab(tabsID, liElem) { // FunÃ§Ã£o que remove separador com o 
             i++;
         }
     });
-
+	
+	
+	// activa a tab anterior no caso de a actual ser eliminada
+	if	(liElem > 1 && $("#li"+liElem).attr('class') === "active") {
+		$(document.body).find("a[href='#page"+(liElem-1)+"']:last").click();
+	}
+	
     delete tabsID[tabsID.indexOf("msg" + liElem)];
 }
 /**
