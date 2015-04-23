@@ -2,6 +2,7 @@ var users = [];
 var numUsers = 0;
 var socket = "";
 var username = "";
+var objectCanvas = null;
 var listaColor = [
     ["default", "Default"],
     ["white", "Branco"],
@@ -166,30 +167,45 @@ $(document).ready(function () {
     });
 
     $(document.body).on('click', '.color_canvas', function () {
-        var d = getDrawObj();
-        d.setColor($(this).attr("id"));
+        if (objectCanvas.id === this.id && objectCanvas !== null) {
+            d.setColor($(this).attr("id"));
+        } else {
+            objectCanvas = getArrayDrawObj(this.id);
+        }
     });
 
-    $(document.body).on('mousedown mousemove mouseup mouseout mouseover mouseout', "#tab1-canvas1", function (e) {
-        var d = getDrawObj();
-        var offset, type, x, y;
-        type = e.handleObj.type;
-        offset = $(this).offset();
-        x = e.pageX - offset.left;
-        y = e.pageY - offset.top;
-        d.draw(x, y, type);
+    $(document.body).on('mousedown mousemove mouseup mouseout mouseover', "canvas", function (e) {
+        if (objectCanvas === null) {
+            objectCanvas = getArrayDrawObj(this.id);
+        } else {
+            if (objectCanvas.id === this.id) {
+                var offset, type, x, y;
+                type = e.handleObj.type;
+                offset = $(this).offset();
+                x = e.pageX - offset.left;
+                y = e.pageY - offset.top;
+                objectCanvas.drawpbj.draw(x, y, type);
 //        d.init();
-        socket.emit('drawClick', {
-            x: x,
-            y: y,
-            type: type
-        });
+                socket.emit('drawClick', {
+                    id: this.id,
+                    x: x,
+                    y: y,
+                    type: type
+                });
+            } else {
+                objectCanvas = getArrayDrawObj(this.id);
+            }
+        }
     });
 
     socket.on('draw', function (data) {
-        var d = getDrawObj();
-        d.draw(data.x, data.y, data.type);
+        if (objectCanvas.id === this.id && objectCanvas !== null) {
+            objectCanvas.drawpbj.draw(data.x, data.y, data.type);
+        } else {
+            objectCanvas = getArrayDrawObj(this.id);
+        }
     });
+
     // recebe as cordenadas dos outros utilizadores e movimenta a label dele
     // conforme as coordenadas recebidas
     socket.on('useron', function (data, port, socketid) {
@@ -327,8 +343,8 @@ $(document).ready(function () {
             pos: tabsID.length
         });
         $(document.body).find("#divchangemodel").remove();
-		// Foco na ultima pagina adicionada
-		$(document.body).find("a[href^='#page']:last").click();
+        // Foco na ultima pagina adicionada
+        $(document.body).find("a[href^='#page']:last").click();
     });
     // Evento "click" no separador "+ Pág."
     $('#tabs a[href="#add-page"]').on('click', function () {

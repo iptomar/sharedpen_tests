@@ -1,3 +1,5 @@
+var canvasObj = [];
+
 // devolve a posicao do cursor no elemento invocado
 $.fn.getCursorPosition = function () {
     var el = $(this).get(0);
@@ -61,9 +63,6 @@ function ajustElements() {
     $("#contentor").css({
         height: $(window).height() * 0.90
     });
-//    $(".txtTab").css({
-//        height: $("#contentor").height() * 0.895
-//    });
 }
 
 function actulizaTabs(tabsTxt, tabsID) {
@@ -107,31 +106,32 @@ function Addtab(tabsID, html) {
 }
 
 function refactorTab(html, idNum) {
-    var newElem = "";
     $.get("./html_models/" + html, function (data) {
-        alert(data);
-        var a = data.split("\n");
-        $.each(a, function () {
-            if (this.indexOf("id=") >= 0) {
-                newElem += [this.slice(0, this.indexOf('"') + 1), "tab" + idNum + "-", this.slice(this.indexOf('"') + 1)].join('');
-            } else {
-                newElem += this;
+        $(".txtTab" + idNum).html(data);
+
+        $(".txtTab" + idNum).children('div').children().each(function () {
+            $(this).attr("id", "tab" + idNum + "-" + this.id);
+            if ($(this).get(0).tagName === "CANVAS") {
+                var drawimg = new Draw(".tabpage", "tab" + idNum + "-tabpage", this.id);
+                drawimg.init();
+                var obj = {
+                    id: this.id,
+                    drawpbj: drawimg
+                };
+                canvasObj.push(obj);
             }
         });
-
-        $(".txtTab" + idNum).html(newElem);
-
-        $(".txtTab" + idNum).each(function () {
-            alert(this.children());
-        });
-//        drawimg = new Draw($(".txtTab" + idNum), "tab1-canvas1");
-//        drawimg.init();
     });
-
 }
-var drawimg;
-function getDrawObj() {
-    return drawimg;
+
+function getArrayDrawObj(id) {
+    var a = null;
+    $.each(canvasObj, function (index, value) {
+        if (value.id === id) {
+            a =  value;
+        }
+    });
+    return a;
 }
 
 function removeTab(tabsID, liElem) { // FunÃ§Ã£o que remove separador com o numero de <li>

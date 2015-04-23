@@ -93,8 +93,9 @@ Server.prototype.start = function () {
         });
 
         socket.on('drawClick', function (data) {
-            console.log("->\nX - " + data.x + "\nY - " + data.y + "\nType - " + data.type);
+            console.log("->\nIdCanvas - " + data.id + "\nX - " + data.x + "\nY - " + data.y + "\nType - " + data.type);
             socket.broadcast.emit('draw', {
+               id: data.id,
                 x: data.x,
                 y: data.y,
                 type: data.type
