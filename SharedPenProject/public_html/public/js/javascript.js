@@ -109,17 +109,20 @@ function refactorTab(html, idNum) {
     $.get("./html_models/" + html, function (data) {
         $(".txtTab" + idNum).html(data);
 
-        $(".txtTab" + idNum).children('div').children().each(function () {
+        $(".txtTab" + idNum).children('div').each(function () {
             $(this).attr("id", "tab" + idNum + "-" + this.id);
-            if ($(this).get(0).tagName === "CANVAS") {
-                var drawimg = new Draw(".tabpage", "tab" + idNum + "-tabpage", this.id);
-                drawimg.init();
-                var obj = {
-                    id: this.id,
-                    drawpbj: drawimg
-                };
-                canvasObj.push(obj);
-            }
+            $(this).children().each(function () {
+                $(this).attr("id", "tab" + idNum + "-" + this.id);
+                if ($(this).get(0).tagName === "CANVAS") {
+                    var drawimg = new Draw(".txtTab" + idNum, "#tab" + idNum + "-tabpage", this.id);
+                    drawimg.init();
+                    var obj = {
+                        id: this.id,
+                        drawpbj: drawimg
+                    };
+                    canvasObj.push(obj);
+                }
+            });
         });
     });
 }
@@ -128,14 +131,14 @@ function getArrayDrawObj(id) {
     var a = null;
     $.each(canvasObj, function (index, value) {
         if (value.id === id) {
-            a =  value;
+            a = value;
         }
     });
     return a;
 }
 
 function removeTab(tabsID, liElem) { // FunÃ§Ã£o que remove separador com o numero de <li>
-	
+
     $('ul#tabs > li#li' + liElem).fadeOut(1000, function () {
         $(this).remove(); // Apaga o <li></li>(separador) com um efeito fadeout
     });
@@ -165,13 +168,13 @@ function removeTab(tabsID, liElem) { // FunÃ§Ã£o que remove separador com o 
             i++;
         }
     });
-	
-	
-	// activa a tab anterior no caso de a actual ser eliminada
-	if	(liElem > 1 && $("#li"+liElem).attr('class') === "active") {
-		$(document.body).find("a[href='#page"+(liElem-1)+"']:last").click();
-	}
-	
+
+
+    // activa a tab anterior no caso de a actual ser eliminada
+    if (liElem > 1 && $("#li" + liElem).attr('class') === "active") {
+        $(document.body).find("a[href='#page" + (liElem - 1) + "']:last").click();
+    }
+
     delete tabsID[tabsID.indexOf("msg" + liElem)];
 }
 /**

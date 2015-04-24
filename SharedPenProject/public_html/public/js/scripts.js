@@ -143,61 +143,86 @@ $(document).ready(function () {
             });
         }
     });
-<<<<<<< HEAD
-//    $(document.body).on('mouseover', 'canvas', function (event) {
-//
-//        $("body").find("#toolbar").remove();
-//
-//        var canvasId = $(this).attr("id");
-//        var pos = $(this).position();
-//        $.get("../html/pallet.html", function (data) {
-//            $("#contentor").append(data);
-//        });
-//        $("#toolbar").css({
-//            top: pos.top + $(document.body).find("#canvas").height() * 0.55,
-//            left: pos.left + $(this).width() / 2 - $(document.body).find("#toolbar").width() / 2
-//        });
-//    });
-=======
-
-
-    $(document.body).on('mouseover', 'canvas', function (event) {
->>>>>>> cc8095371cacc0e4bcf6ac45019b856ba47b6f7c
-
-//    $(document.body).on('mouseout', 'canvas', function () {
-//        $("body").find("#toolbar").remove();
-//    });
 
     $(document.body).on('click', '#closePallet', function () {
-        $(document.body).find("#toolbar").remove();
-    });
-
-    $(document.body).on('click', '.color_canvas', function () {
-        if (objectCanvas.id === this.id && objectCanvas !== null) {
-            d.setColor($(this).attr("id"));
+        var idToll = $(document.body).find("#toolbar").attr("data-idPai");
+        if (objectCanvas === null) {
+            objectCanvas = getArrayDrawObj(idToll);
         } else {
-            objectCanvas = getArrayDrawObj(this.id);
+            if (objectCanvas.id === idToll) {
+                objectCanvas.drawpbj.setPalletOff();
+                $(document.body).find("#toolbar").remove();
+            }
+            else {
+                objectCanvas = getArrayDrawObj(idToll);
+
+            }
         }
     });
 
-    $(document.body).on('mousedown mousemove mouseup mouseout mouseover', "canvas", function (e) {
+    $(document.body).on('click', '.color_canvas', function (e) {
+        var idToll = $("body").find("#toolbar").attr("data-idPai");
+        if (objectCanvas === null) {
+            objectCanvas = getArrayDrawObj(idToll);
+        } else {
+            if (objectCanvas.id === idToll) {
+                if ($(this).attr("id") !== "sizecur") {
+                    objectCanvas.drawpbj.setColor($(this).attr("id"));
+                    objectCanvas.drawpbj.setPalletOff();
+                    $("body").find("#toolbar").remove();
+                } else if ($(this).attr("id") === "sizecur") {
+                    objectCanvas.drawpbj.setSizePensil($("#sizecur option:selected" ).text());
+                
+//                    $("body").find("#toolbar").remove();
+                }
+
+            }
+            else {
+                objectCanvas = getArrayDrawObj(idToll);
+            }
+        }
+    });
+
+
+    $(document.body).on('mousedown mousemove mouseup', "canvas", function (e) {
+        $(this).on("contextmenu", function () {
+            return false;
+        });
         if (objectCanvas === null) {
             objectCanvas = getArrayDrawObj(this.id);
         } else {
             if (objectCanvas.id === this.id) {
-                var offset, type, x, y;
-                type = e.handleObj.type;
-                offset = $(this).offset();
-                x = e.pageX - offset.left;
-                y = e.pageY - offset.top;
-                objectCanvas.drawpbj.draw(x, y, type);
-//        d.init();
-                socket.emit('drawClick', {
-                    id: this.id,
-                    x: x,
-                    y: y,
-                    type: type
-                });
+                switch (event.which) {
+                    case 1:
+                        var offset, type, x, y;
+                        type = e.handleObj.type;
+                        offset = $(this).offset();
+                        e.offsetX = e.clientX - offset.left;
+                        e.offsetY = e.clientY - offset.top;
+                        x = e.offsetX;
+                        y = e.offsetY;
+                        objectCanvas.drawpbj.draw(x, y, type);
+                        if (objectCanvas.drawpbj.getFlag()) {
+                            socket.emit('drawClick', {
+                                id: this.id,
+                                x: x,
+                                y: y,
+                                type: type
+                            });
+                        }
+//                        alert('Left Mouse button pressed.');
+                        break;
+                    case 2:
+//                        alert('Middle Mouse button pressed.');
+                        break;
+                    case 3:
+                        objectCanvas.drawpbj.setPallet(e.pageX, e.pageY, this.id);
+//                        alert('Right Mouse button pressed.');
+                        break;
+                    default:
+//                        alert('You have a strange Mouse!');
+                }
+
             } else {
                 objectCanvas = getArrayDrawObj(this.id);
             }
@@ -205,10 +230,15 @@ $(document).ready(function () {
     });
 
     socket.on('draw', function (data) {
-        if (objectCanvas.id === this.id && objectCanvas !== null) {
-            objectCanvas.drawpbj.draw(data.x, data.y, data.type);
-        } else {
+        if (objectCanvas === null) {
             objectCanvas = getArrayDrawObj(this.id);
+        } else {
+            if (objectCanvas.id === data.id) {
+                console.log(" X: " + data.x + " Y: " + data.y + " type: " + data.type);
+                objectCanvas.drawpbj.draw(data.x, data.y, data.type);
+            } else {
+                objectCanvas = getArrayDrawObj(this.id);
+            }
         }
     });
 
@@ -378,6 +408,7 @@ $(document).ready(function () {
         return false;
     });
 });
+
 $(window).resize(function () {
     ajustElements();
 });
